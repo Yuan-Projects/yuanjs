@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xml:base="https://main-yuanprojects.rhcloud.com"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+ <title>Yuan Projects</title>
+ <link>https://main-yuanprojects.rhcloud.com</link>
+ <description></description>
+ <language>en</language>
+<item>
+ <title>YuanPad 1.1 is now available</title>
+ <link>https://main-yuanprojects.rhcloud.com/YuanPad-1.1</link>
+ <description>&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot; property=&quot;content:encoded&quot;&gt;&lt;p&gt;This release fixes some bugs against version 1.0.&lt;/p&gt;
+&lt;p&gt;Here is the list:&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;Fixed bug #2 (code highlight bug)&lt;/li&gt;
+&lt;li&gt;Fixed bug #3 (Code snippet parsed as smilies)&lt;/li&gt;
+&lt;li&gt;Fixed bug #7 (The comment form looks weird in IE6)&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;The admin user will be logged in automatically after the installation finished in this release.&lt;/p&gt;
+&lt;p&gt;Click &lt;a href=&quot;https://yuan-pad.googlecode.com/files/yuanpad-1.1-r26.tar.gz&quot;&gt;here&lt;/a&gt; to get it.&lt;/p&gt;
+&lt;p&gt;Thank you for using YuanPad.&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</description>
+ <pubDate>Sun, 05 May 2013 04:37:12 +0000</pubDate>
+ <dc:creator>rainyjune</dc:creator>
+ <guid isPermaLink="false">55 at https://main-yuanprojects.rhcloud.com</guid>
+ <comments>https://main-yuanprojects.rhcloud.com/YuanPad-1.1#comments</comments>
+</item>
+<item>
+ <title>YuanPad 1.0 released</title>
+ <link>https://main-yuanprojects.rhcloud.com/YuanPad-1.0</link>
+ <description>&lt;div class=&quot;field field-name-body field-type-text-with-summary field-label-hidden&quot;&gt;&lt;div class=&quot;field-items&quot;&gt;&lt;div class=&quot;field-item even&quot; property=&quot;content:encoded&quot;&gt;&lt;p&gt;YuanPad is a simple and powerful PHP guestbook and is the successor to &lt;a href=&quot;http://code.google.com/p/mapleleaf/&quot; target=&quot;_blank&quot;&gt;MapleLeaf&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;I am glad to announce that the first version of YuanPad released, this release is based on MapleLeaf 2.0 Beta which released on September 17th, 2011.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;New Features introduced in MapleLeaf 2.0 Beta&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;&lt;li&gt;Added search support.&lt;/li&gt;
+&lt;li&gt;Added Multiple-database support(add mysql,mysqli,sqlite support).&lt;/li&gt;
+&lt;li&gt;Added allowable tags support.&lt;/li&gt;
+&lt;li&gt;Added API support.&lt;/li&gt;
+&lt;li&gt;Added RSS support.&lt;/li&gt;
+&lt;li&gt;Added code highlight support.&lt;/li&gt;
+&lt;li&gt;Added user management support.&lt;/li&gt;
+&lt;/ul&gt;&lt;p&gt;This project is hosted on &lt;a href=&quot;http://code.google.com/p/yuan-pad/&quot;&gt;Google Code&lt;/a&gt;, feel free to check out the latest project source code. The release package can be found on &lt;a href=&quot;http://code.google.com/p/yuan-pad/downloads/list&quot; target=&quot;_blank&quot;&gt;http://code.google.com/p/yuan-pad/downloads/list&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;field field-name-field-tags field-type-taxonomy-term-reference field-label-above clearfix&quot;&gt;&lt;h3 class=&quot;field-label&quot;&gt;Tags: &lt;/h3&gt;&lt;ul class=&quot;links&quot;&gt;&lt;li class=&quot;taxonomy-term-reference-0&quot; rel=&quot;dc:subject&quot;&gt;&lt;a href=&quot;/taxonomy/term/2&quot; typeof=&quot;skos:Concept&quot; property=&quot;rdfs:label skos:prefLabel&quot; datatype=&quot;&quot;&gt;YuanPad&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;</description>
+ <pubDate>Mon, 31 Oct 2011 16:00:00 +0000</pubDate>
+ <dc:creator>rainyjune</dc:creator>
+ <guid isPermaLink="false">1 at https://main-yuanprojects.rhcloud.com</guid>
+ <comments>https://main-yuanprojects.rhcloud.com/YuanPad-1.0#comments</comments>
+</item>
+</channel>
+</rss>
