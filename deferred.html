@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>YuanJS test page</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="yuan.js"></script>
+        <script type="text/javascript">
+            var $ = yuanjs;
+
+            function testfuc () {
+                var dtd = $.Deferred();
+                setTimeout(function () {
+                    var number = Math.floor((Math.random()*10)+1);
+                    if (number > 5) {
+                        dtd.resolve(number);
+                    } else {
+                        dtd.reject(number);
+                    }
+                }, 1000);
+                return dtd.promise();
+            }
+
+            testfuc().then(function (argument) {
+                // body...
+                console.log("resolve:", argument);
+            }, function (argument) {
+                // body...
+                console.log("reject:", argument);
+            });
+        </script>
+    </body>
+</html>
