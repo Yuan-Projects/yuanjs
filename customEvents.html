@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>YuanJS test page</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="yuan.js"></script>
+        <script type="text/javascript">
+            var $ = yuanjs;
+
+            function function_name1 () {
+                alert('function 1');
+            }
+            function function_name2 () {
+                alert('function 2');
+            }
+            function function_name3 () {
+                alert('function 3');
+            }
+            $.on('event1', function_name3);
+            $.on('event1', function_name2);
+            $.on('event1', function_name1);
+
+            $.trigger('event1');
+        </script>
+    </body>
+</html>
