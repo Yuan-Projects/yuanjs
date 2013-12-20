@@ -2,6 +2,6 @@ yuanjs
 ======
 
 Features:
-1.Deferred Object
-2.HTTP (Ajax) request
-3.Custom Events
+ * Deferred Object
+ * HTTP (Ajax) request
+ * Custom Events
