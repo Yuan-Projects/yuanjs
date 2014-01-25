@@ -318,7 +318,7 @@
             completeCallBack && completeCallBack(xhr, textStatus);
             if(xhr.status === 200) {
                 var resultType = xhr.getResponseHeader("Content-Type");
-                if(dataType === "xml" || (resultType.indexOf("xml") !== -1 && xhr.responseXML)){
+                if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
                     successCallBack && successCallBack(resultXML, xhr);
                 } else if(dataType === "json" || resultType === "application/json") {
                     successCallBack && successCallBack(JSON.parse(resultText), xhr);
