@@ -10,7 +10,7 @@
   "license": "MIT",
   "author": "Kang CHEN <rainyjune@live.cn>",
   "main": "build/yuan.js",
-  "repository: {
+  "repository": {
     "type": "git",
     "url": "https://github.com/rainyjune/yuanjs.git"
   },
