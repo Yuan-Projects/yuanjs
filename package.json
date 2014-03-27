@@ -1,0 +1,21 @@
+{
+  "name": "YuanJS",
+  "version": "0.0.1",
+  "description": "YuanJS, just another small JavaScript library",
+  "keywords": ["yuanjs", "YuanJS"],
+  "homepage": "https://github.com/rainyjune/yuanjs",
+  "bugs": {
+    "url": "https://github.com/rainyjune/yuanjs/issues"
+  },
+  "license": "MIT",
+  "author": "Kang CHEN <rainyjune@live.cn>",
+  "main": "build/yuan.js",
+  "repository: {
+    "type": "git",
+    "url": "https://github.com/rainyjune/yuanjs.git"
+  },
+  "dependencies": {
+    "jshint": "~2.3.0",
+    "uglify-js": "~2.4.7"
+  }
+}
