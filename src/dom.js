@@ -3,8 +3,15 @@
      *
      */
      
-    function id(id) {
-      return typeof id === "string" ? document.getElementById(id) : id;
+    function id() {
+      var argLength = arguments.length;
+      if (argLength == 0) throw Error('No id name provided.');
+      var result = [];
+      for (var i = 0; i < argLength; i++) {
+        var thisArg = arguments[i];
+        result.push(typeof thisArg === "string" ? document.getElementById(thisArg) : thisArg);
+      }
+      return argLength > 1 ? result : result[0];
     }
     
     function tag(tagName) {
