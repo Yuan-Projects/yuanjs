@@ -11,6 +11,7 @@ var releases = {
 
   yuanjs: {
     files: [
+      'debugger.js',
       'deferred.js',
       'helper.js',
       'ajax.js',
