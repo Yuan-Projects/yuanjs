@@ -207,7 +207,21 @@
       // 8. return undefined
     };
   }
-      /**
+  
+  // A String.trim() method for ECMAScript 3
+  if(!String.prototype.trim) {
+    String.prototype.trim = function () {
+      return this.replace(/^\s+|\s+$/g,'');
+    };
+  }
+  
+  // From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
+  // Running the following code before any other code will create Array.isArray() if it's not natively available.
+  if(!Array.isArray) {
+    Array.isArray = function (vArg) {
+      return Object.prototype.toString.call(vArg) === "[object Array]";
+    };
+  }    /**
      * Ajax request
      *
      */
