@@ -1,7 +1,17 @@
-/* YuanJS v0.0.1 ~ (c) 2013-2014 Kang CHEN */
+/* YuanJS v0.0.2 ~ (c) 2013-2014 Kang CHEN */
 (function (window, undefined) {
     "use strict";
     var yuanjs = {};
+if (!window.console) {
+  window.console = {
+    log: function() {
+      var args = Array.prototype.slice.call(arguments);
+      var str = args.join("\n");
+      alert(str);
+    }
+  };
+}
+yuanjs.console = window.console;
   /**
    * Deferred Object
    */
@@ -292,8 +302,15 @@
      *
      */
      
-    function id(id) {
-        return document.getElementById(id);
+    function id() {
+      var argLength = arguments.length;
+      if (argLength == 0) throw Error('No id name provided.');
+      var result = [];
+      for (var i = 0; i < argLength; i++) {
+        var thisArg = arguments[i];
+        result.push(typeof thisArg === "string" ? document.getElementById(thisArg) : thisArg);
+      }
+      return argLength > 1 ? result : result[0];
     }
     
     function tag(tagName) {
@@ -335,7 +352,8 @@
     yuanjs.id = id;
     yuanjs.tag = tag;
     yuanjs.cssClass = cssClass;
-        // Events off and off
+    
+    // Events on and off
     var Events = [];
 
     function on(event, callback) {
@@ -373,6 +391,27 @@
     yuanjs.on = on;
     yuanjs.off = off;
     yuanjs.trigger = trigger;
+    
+  // DOM Events
+
+  function addEventListener(dom, eventName, callback) {
+    if (dom.addEventListener) {
+      dom.addEventListener(eventName, callback, false);
+    } else if (dom.attachEvent) {
+      dom.attachEvent("on" + eventName, callback);
+    }
+  }
+
+  function removeEventListener(dom, eventName, callback) {
+    if (dom.removeEventListener) {
+      dom.removeEventListener(eventName, callback, false);
+    } else if (dom.detachEvent) {
+      dom.detachEvent("on" + eventName, callback);
+    }
+  }
+
+  yuanjs.addEventListener = addEventListener;
+  yuanjs.removeEventListener = removeEventListener;
     
   if ( typeof module != 'undefined' && module.exports ) {
     module.exports = yuanjs;

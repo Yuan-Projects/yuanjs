@@ -1,4 +1,4 @@
-    // Events off and off
+    // Events on and off
     var Events = [];
 
     function on(event, callback) {

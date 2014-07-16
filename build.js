@@ -16,7 +16,8 @@ var releases = {
       'helper.js',
       'ajax.js',
       'dom.js',
-      'events.js'
+      'events.js',
+      'domEvents.js',
     ],
   },
 

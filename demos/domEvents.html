@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>YuanJS DOM events test page</title>
+    <style type="text/css">
+    #infoBox {
+      padding: 5px;
+      border: 2px dashed #ccc;
+      margin-bottom: 10px;
+      width: 136px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+    }
+    #wrapper {
+      padding: 20px 0;
+      background: black;
+      width: 150px;
+      text-align: center;
+    }
+    </style>
+  </head>
+  <body>
+    <p id="infoBox"></p>
+    <div id="wrapper">
+      <input type="button" value="click me" id="btn" />
+    </div>
+    
+    <script type="text/javascript" src="../build/yuan.js"></script>
+    <script type="text/javascript">
+    var $ = yuanjs;
+    var infoBox = $.id("infoBox"),
+        wrapper = $.id("wrapper"),
+        btn = $.id("btn");
+        
+    $.addEventListener(wrapper, "click", function(){
+      console.log("DIV clicked");
+    });
+    
+    $.addEventListener(wrapper, "click", function(){
+      console.log("DIV clicked 2");
+    });
+    
+    
+    $.addEventListener(btn, "click", function(){
+      console.log("Button clicked");
+    });
+    
+    var btnClick2 = function(){
+      console.log("Button clicked 2");
+    };
+    
+    $.addEventListener(btn, "click", btnClick2);
+    
+    setTimeout(function() {
+      $.removeEventListener(btn, "click", btnClick2);
+    }, 5000);    
+    
+    
+    </script>
+  </body>
+</html>
