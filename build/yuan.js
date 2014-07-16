@@ -2,16 +2,17 @@
 (function (window, undefined) {
     "use strict";
     var yuanjs = {};
-if (!window.console) {
-  window.console = {
-    log: function() {
-      var args = Array.prototype.slice.call(arguments);
-      var str = args.join("\n");
-      alert(str);
-    }
-  };
-}
-yuanjs.console = window.console;
+  // Poly fill for IE 6
+  if (!window.console) {
+    window.console = {
+      log: function() {
+        var args = Array.prototype.slice.call(arguments);
+        var str = args.join("\n");
+        alert(str);
+      }
+    };
+  }
+  yuanjs.console = window.console;
   /**
    * Deferred Object
    */
@@ -205,17 +206,6 @@ yuanjs.console = window.console;
       }
       // 8. return undefined
     };
-  }
-  
-  // Poly fill for IE 6
-  if (!window.console) {
-      window.console = {
-          log: function() {
-              var args = Array.prototype.slice.call(arguments);
-              var str = args.join("\n");
-              alert(str);
-          }
-      };
   }
       /**
      * Ajax request
