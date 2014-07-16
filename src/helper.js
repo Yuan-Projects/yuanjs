@@ -146,3 +146,34 @@
       return Object.prototype.toString.call(vArg) === "[object Array]";
     };
   }
+  
+  function isNumber(param) {
+    return !isNaN(param);
+  }
+  
+  function isString(param) {
+    return typeof param === "string";
+  }
+  
+  function isFunction(param) {
+    return Object.prototype.toString.call(x) === '[object Function]';
+  }
+  
+  function isNull(param) {
+    return param === null;
+  }
+  
+  function isUndefined(param) {
+    return typeof param === "undefined";
+  }
+  
+  function isEmpty(param) {
+    return /^\s*$/.test(param);
+  }
+
+  yuanjs.isNumber = isNumber;
+  yuanjs.isString = isString;
+  yuanjs.isFunction = isFunction;
+  yuanjs.isNull = isNull;
+  yuanjs.isUndefined = isUndefined;
+  yuanjs.isEmpty = isEmpty;
