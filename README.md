@@ -7,3 +7,10 @@ Features:
  * Custom Events
  * DOM Events
  * Selectors
+
+Supported browsers:
+ * Internet Explorer
+ * Firefox
+ * Chrome
+ * Safari
+ * Opera
