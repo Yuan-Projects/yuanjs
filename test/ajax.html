@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Ajax Test</title>
+  <link rel="stylesheet" type="text/css" href="testsuite/testsuite.css" />
+</head>
+<body>
+  <ul id="results"></ul>
+  <script type="text/javascript" src="../build/yuan.js"></script>
+  <script type="text/javascript" src="testsuite/testsuite.js"></script>
+  <script type="text/javascript">
+    window.onload = initAll;
+    function initAll() {
+      test("Ajax test #1", function () {
+        pause();
+        yuanjs.ajax({
+          url: '../demos/rss.xml'
+        }).then(function (data) {
+          assert(true, "Ajax request completed.");
+          resume();
+        }, function () {
+          assert(false, "Ajax request failed");
+          resume();
+        });
+      });
+    }
+  </script>
+</body>
+</html>

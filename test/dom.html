@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>DOM Test</title>
+    <link rel="stylesheet" type="text/css" href="testsuite/testsuite.css" />
+  </head>
+  <body>
+    <h1 id="h1heading">The h1 heading</h1>
+    <p>The first paragraph.</p>
+    <p>The second paragraph.</p>
+    <p class="testclass">The third paragraph with the class 'testclass'.</p>
+    <ul id="results"></ul>
+    
+    <script type="text/javascript" src="testsuite/testsuite.js"></script>
+    <script type="text/javascript" src="../build/yuan.js"></script>
+    <script type="text/javascript">
+      window.onload = initAll;
+      function initAll(){
+         assert(yuanjs.id('h1heading'), "There is one element with the id 'h1heading'" );
+         assert(yuanjs.tag('p').length === 3, "There are three paragraphs in the page." );
+         assert(yuanjs.cssClass('testclass').length === 1, "There is one element with the css class 'testclass'" );
+      }
+    </script>
+  </body>
+</html>
