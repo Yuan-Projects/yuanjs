@@ -5,7 +5,7 @@
    
   function id() {
     var argLength = arguments.length;
-    if (argLength == 0) throw Error('No id name provided.');
+    if (argLength === 0) throw Error('No id name provided.');
     var result = [];
     for (var i = 0; i < argLength; i++) {
       var thisArg = arguments[i];
@@ -38,11 +38,11 @@
   }
 
   function cssClass(classname, parentNode) {
-    var parentNode = parentNode || document;
+    parentNode = parentNode || document;
     if(document.getElementsByClassName) return parentNode.getElementsByClassName(classname);
     var classnameArr = classname.replace(/^\s+|\s+$/g,"").split(/\s+/);
     if(document.querySelectorAll) {
-      var classname = "." + classnameArr.join(".");
+      classname = "." + classnameArr.join(".");
       return parentNode.querySelectorAll(classname);
     }
     var allTags = parentNode.getElementsByTagName("*");

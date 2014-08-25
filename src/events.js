@@ -31,7 +31,7 @@
         var callbackArray = Events[event];
         for (var i = callbackArray.length - 1; i >= 0; i--) {
             callbackArray[i].apply(callbackArray[i], args);
-        };
+        }
     }
     yuanjs.on = on;
     yuanjs.off = off;

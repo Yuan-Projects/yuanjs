@@ -31,11 +31,11 @@
         }
         xhr.open(type, url, isAsyc);
         if(isAsyc) {
-            xhr.onreadystatechange = function() {
-                if(xhr.readyState === 4) {
-                    callBack();
-                }
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              callBack();
             }
+          };
         }
 
         xhr.setRequestHeader("Content-Type", contentType);
@@ -59,19 +59,29 @@
             var resultText = xhr.responseText;
             var resultXML = xhr.responseXML;
             var textStatus = xhr.statusText;
-            completeCallBack && completeCallBack(xhr, textStatus);
+            if (completeCallBack) {
+              completeCallBack(xhr, textStatus);
+            }
             if(xhr.status === 200) {
                 var resultType = xhr.getResponseHeader("Content-Type");
                 if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
-                    successCallBack && successCallBack(resultXML, xhr);
+                  if (successCallBack) {
+                    successCallBack(resultXML, xhr);
+                  }
                 } else if(dataType === "json" || resultType === "application/json") {
-                    successCallBack && successCallBack(JSON.parse(resultText), xhr);
+                  if (successCallBack) {
+                    successCallBack(JSON.parse(resultText), xhr);
+                  }
                 }else{
-                    successCallBack && successCallBack(resultText, xhr);
+                  if (successCallBack) {
+                    successCallBack(resultText, xhr);
+                  }
                 }
                 dtd.resolve(xhr);
             } else {
-                errorCallBack && errorCallBack(xhr.status, xhr);
+              if (errorCallBack) {
+                errorCallBack(xhr.status, xhr);
+              }
                 dtd.reject(xhr);
             }
         }

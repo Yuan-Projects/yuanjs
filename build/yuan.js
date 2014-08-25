@@ -1,7 +1,8 @@
-/* YuanJS v0.0.2 ~ (c) 2013-2014 Kang CHEN */
 (function (window, undefined) {
+  /* jshint -W034 */
     "use strict";
     var yuanjs = {};
+
   // Poly fill for IE 6
   if (!window.console) {
     window.console = {
@@ -13,6 +14,7 @@
     };
   }
   yuanjs.console = window.console;
+
   /**
    * Deferred Object
    */
@@ -74,7 +76,8 @@
   }
   
   yuanjs.Deferred = Deferred;
-    /**
+  
+  /**
    * Helper functions
    *
    */
@@ -118,36 +121,36 @@
   }
 
   if (!Array.prototype.indexOf) {
-      Array.prototype.indexOf = function (searchElement /*, fromIndex */ ) {
-          "use strict";
-          if (this == null) {
-              throw new TypeError();
-          }
-          var t = Object(this);
-          var len = t.length >>> 0;
-          if (len === 0) {
-              return -1;
-          }
-          var n = 0;
-          if (arguments.length > 1) {
-              n = Number(arguments[1]);
-              if (n != n) { // shortcut for verifying if it's NaN
-                  n = 0;
-              } else if (n != 0 && n != Infinity && n != -Infinity) {
-                  n = (n > 0 || -1) * Math.floor(Math.abs(n));
-              }
-          }
-          if (n >= len) {
-              return -1;
-          }
-          var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-          for (; k < len; k++) {
-              if (k in t && t[k] === searchElement) {
-                  return k;
-              }
-          }
-          return -1;
+    Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
+      "use strict";
+      if (this === null) {
+        throw new TypeError();
       }
+      var t = Object(this);
+      var len = t.length >>> 0;
+      if (len === 0) {
+        return -1;
+      }
+      var n = 0;
+      if (arguments.length > 1) {
+        n = Number(arguments[1]);
+        if (n != n) { // shortcut for verifying if it's NaN
+          n = 0;
+        } else if (n !== 0 && n != Infinity && n != -Infinity) {
+          n = (n > 0 || -1) * Math.floor(Math.abs(n));
+        }
+      }
+      if (n >= len) {
+        return -1;
+      }
+      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+      for (; k < len; k++) {
+        if (k in t && t[k] === searchElement) {
+          return k;
+        }
+      }
+      return -1;
+    };
   }
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
   // Production steps of ECMA-262, Edition 5, 15.4.4.18
@@ -158,7 +161,7 @@
       'use strict';
       var T, k;
 
-      if (this == null) {
+      if (this === null) {
         throw new TypeError("this is null or not defined");
       }
 
@@ -252,7 +255,8 @@
   yuanjs.isFunction = isFunction;
   yuanjs.isNull = isNull;
   yuanjs.isUndefined = isUndefined;
-  yuanjs.isEmpty = isEmpty;    /**
+  yuanjs.isEmpty = isEmpty;
+    /**
      * Ajax request
      *
      */
@@ -285,11 +289,11 @@
         }
         xhr.open(type, url, isAsyc);
         if(isAsyc) {
-            xhr.onreadystatechange = function() {
-                if(xhr.readyState === 4) {
-                    callBack();
-                }
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              callBack();
             }
+          };
         }
 
         xhr.setRequestHeader("Content-Type", contentType);
@@ -313,81 +317,112 @@
             var resultText = xhr.responseText;
             var resultXML = xhr.responseXML;
             var textStatus = xhr.statusText;
-            completeCallBack && completeCallBack(xhr, textStatus);
+            if (completeCallBack) {
+              completeCallBack(xhr, textStatus);
+            }
             if(xhr.status === 200) {
                 var resultType = xhr.getResponseHeader("Content-Type");
                 if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
-                    successCallBack && successCallBack(resultXML, xhr);
+                  if (successCallBack) {
+                    successCallBack(resultXML, xhr);
+                  }
                 } else if(dataType === "json" || resultType === "application/json") {
-                    successCallBack && successCallBack(JSON.parse(resultText), xhr);
+                  if (successCallBack) {
+                    successCallBack(JSON.parse(resultText), xhr);
+                  }
                 }else{
-                    successCallBack && successCallBack(resultText, xhr);
+                  if (successCallBack) {
+                    successCallBack(resultText, xhr);
+                  }
                 }
                 dtd.resolve(xhr);
             } else {
-                errorCallBack && errorCallBack(xhr.status, xhr);
+              if (errorCallBack) {
+                errorCallBack(xhr.status, xhr);
+              }
                 dtd.reject(xhr);
             }
         }
         return dtd.promise();
     }
     yuanjs.ajax = ajax;
-        /**
-     * DOM Manipulation
-     *
-     */
-     
-    function id() {
-      var argLength = arguments.length;
-      if (argLength == 0) throw Error('No id name provided.');
-      var result = [];
-      for (var i = 0; i < argLength; i++) {
-        var thisArg = arguments[i];
-        result.push(typeof thisArg === "string" ? document.getElementById(thisArg) : thisArg);
+    
+  /**
+   * DOM Manipulation
+   *
+   */
+   
+  function id() {
+    var argLength = arguments.length;
+    if (argLength === 0) throw Error('No id name provided.');
+    var result = [];
+    for (var i = 0; i < argLength; i++) {
+      var thisArg = arguments[i];
+      result.push(typeof thisArg === "string" ? document.getElementById(thisArg) : thisArg);
+    }
+    return argLength > 1 ? result : result[0];
+  }
+
+  function tag(tagName) {
+    var newArr;
+    if (!window.findByTagWorksAsExpected) {
+      window.findByTagWorksAsExpected = (function(){
+        var div = document.createElement("div");
+        div.appendChild(document.createComment("test"));
+        return div.getElementsByTagName("*").length === 0;
+      })();
+    }
+    var allElements = document.getElementsByTagName(tagName);
+    if (tagName === "*") {
+      if (!window.findByTagWorksAsExpected) {
+        newArr = [];
+        for (var n = allElements.length - 1; n >= 0; n--) {
+          if (allElements[n].nodeType == 1){
+            newArr.push(allElements[n]);
+          }
+        }
       }
-      return argLength > 1 ? result : result[0];
     }
-    
-    function tag(tagName) {
-        return document.getElementsByTagName(tagName);
+    return newArr ? newArr : allElements;
+  }
+
+  function cssClass(classname, parentNode) {
+    parentNode = parentNode || document;
+    if(document.getElementsByClassName) return parentNode.getElementsByClassName(classname);
+    var classnameArr = classname.replace(/^\s+|\s+$/g,"").split(/\s+/);
+    if(document.querySelectorAll) {
+      classname = "." + classnameArr.join(".");
+      return parentNode.querySelectorAll(classname);
     }
-    
-    function cssClass(classname, parentNode) {
-        var parentNode = parentNode || document;
-        if(document.getElementsByClassName) return parentNode.getElementsByClassName(classname);
-        var classnameArr = classname.replace(/^\s+|\s+$/g,"").split(/\s+/);
-        if(document.querySelectorAll) {
-            var classname = "." + classnameArr.join(".");
-            return parentNode.querySelectorAll(classname);
+    var allTags = parentNode.getElementsByTagName("*");
+    var nodes = [];
+    if(allTags.length) {
+      tagLoop:
+      for(var i = 0; i < allTags.length; i++) {
+        var tmpTag = allTags[i];
+        var tmpClass = tmpTag.className;
+        if(!tmpClass) continue tagLoop;
+        if (tmpClass === classname) {
+          nodes.push(tmpTag);
+          continue tagLoop;
         }
-        var allTags = parentNode.getElementsByTagName("*");
-        var nodes = [];
-        if(allTags.length) {
-            tagLoop:
-            for(var i = 0; i < allTags.length; i++) {
-                var tmpTag = allTags[i];
-                var tmpClass = tmpTag.className;
-                if(!tmpClass) continue tagLoop;
-                if (tmpClass === classname) {
-                    nodes.push(tmpTag);
-                    continue tagLoop;
-                }
-                matchLoop:
-                for(var j = 0; j < classnameArr.length; j++) {
-                    var patt = new RegExp("\\b" + classnameArr[j] + "\\b");
-                    if(!patt.test(tmpClass)) {
-                        continue tagLoop;
-                    }
-                }
-                nodes.push(tmpTag);
-            }
+        matchLoop:
+        for(var j = 0; j < classnameArr.length; j++) {
+          var patt = new RegExp("\\b" + classnameArr[j] + "\\b");
+          if(!patt.test(tmpClass)) {
+            continue tagLoop;
+          }
         }
-        return nodes;
+        nodes.push(tmpTag);
+      }
     }
-    yuanjs.id = id;
-    yuanjs.tag = tag;
-    yuanjs.cssClass = cssClass;
-    
+    return nodes;
+  }
+  yuanjs.id = id;
+  yuanjs.tag = tag;
+  yuanjs.cssClass = cssClass;
+
+
     // Events on and off
     var Events = [];
 
@@ -421,12 +456,13 @@
         var callbackArray = Events[event];
         for (var i = callbackArray.length - 1; i >= 0; i--) {
             callbackArray[i].apply(callbackArray[i], args);
-        };
+        }
     }
     yuanjs.on = on;
     yuanjs.off = off;
     yuanjs.trigger = trigger;
     
+
   // DOM Events
 
   function addEventListener(dom, eventName, callback) {
@@ -448,6 +484,7 @@
   yuanjs.addEventListener = addEventListener;
   yuanjs.removeEventListener = removeEventListener;
     
+
   if ( typeof module != 'undefined' && module.exports ) {
     module.exports = yuanjs;
   } else {
