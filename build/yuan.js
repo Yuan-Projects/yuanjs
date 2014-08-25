@@ -1,7 +1,7 @@
 (function (window, undefined) {
   /* jshint -W034 */
-    "use strict";
-    var yuanjs = {};
+  "use strict";
+  var yuanjs = {};
 
   // Poly fill for IE 6
   if (!window.console) {
