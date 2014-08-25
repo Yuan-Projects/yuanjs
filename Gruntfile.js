@@ -33,7 +33,7 @@
     },
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! <%= pkg.name %> v<%= pkg.version %> */\n'
       },
       build: {
         src: 'build/yuan.js',
