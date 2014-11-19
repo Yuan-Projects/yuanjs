@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>YuanJS CSS test page</title>
+    </head>
+    <body>
+      <div class="testa" id="testdiv">
+        This div is div.testa
+      </div>
+        <script type="text/javascript" src="../build/yuan.js"></script>
+        <script type="text/javascript">
+            var $ = yuanjs;
+            console.log($.hasClass(document.getElementById("testdiv"), "testa"));
+        </script>
+    </body>
+</html>

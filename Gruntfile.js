@@ -9,6 +9,7 @@
     'src/dom.js',
     'src/events.js',
     'src/domEvents.js',
+    'src/css.js',
     'src/close.js'
   ];
 
