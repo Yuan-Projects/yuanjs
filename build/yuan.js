@@ -468,8 +468,13 @@
   function addEventListener(dom, eventName, callback) {
     if (dom.addEventListener) {
       dom.addEventListener(eventName, callback, false);
+      return callback;
     } else if (dom.attachEvent) {
-      dom.attachEvent("on" + eventName, callback);
+      var bound = function() {
+	return callback.apply(dom, arguments);
+      };
+      dom.attachEvent("on" + eventName, bound);
+      return bound;
     }
   }
 
@@ -484,6 +489,17 @@
   yuanjs.addEventListener = addEventListener;
   yuanjs.removeEventListener = removeEventListener;
     
+
+  function hasClass(element, className) {
+    var originalClassName = element.className;
+    if (!originalClassName) {
+      return false;
+    }
+    var classRegExp = new RegExp("\\b" + className + "\\b");
+    return classRegExp.test(originalClassName);
+  }
+  
+  yuanjs.hasClass = hasClass;
 
   if ( typeof module != 'undefined' && module.exports ) {
     module.exports = yuanjs;
