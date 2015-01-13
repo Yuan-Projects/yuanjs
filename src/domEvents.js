@@ -4,8 +4,13 @@
   function addEventListener(dom, eventName, callback) {
     if (dom.addEventListener) {
       dom.addEventListener(eventName, callback, false);
+      return callback;
     } else if (dom.attachEvent) {
-      dom.attachEvent("on" + eventName, callback);
+      var bound = function() {
+	return callback.apply(dom, arguments);
+      };
+      dom.attachEvent("on" + eventName, bound);
+      return bound;
     }
   }
 
