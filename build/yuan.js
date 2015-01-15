@@ -699,6 +699,7 @@
 
     yuanjs.addEvent = addEvent;
     yuanjs.removeEvent = removeEvent;
+    yuanjs.triggerEvent = triggerEvent;
   })();
 
 
