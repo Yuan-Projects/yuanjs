@@ -463,8 +463,6 @@
     yuanjs.trigger = trigger;
     
 
-    // DOM Events
-
   function fixEvent(event) {
     // Predefines often-used functions
     function returnTrue() { return true; }
@@ -537,6 +535,7 @@
     return event;
   }
 
+
   (function(){
     var cache = {},
 	guidCounter = 1,
@@ -567,6 +566,11 @@
     yuanjs.getData = getData;
     yuanjs.removeData = removeData;
   })();
+
+
+    // DOM Events
+
+
 
   (function(){
     var nextGuid = 1;
