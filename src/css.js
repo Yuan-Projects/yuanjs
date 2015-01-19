@@ -20,6 +20,21 @@
       }
     }
   }
+
+  function height(element, newHeight) {
+    if (newHeight) {
+      element.style.height = newHeight;
+    } else {
+      if (window.getComputedStyle) {
+	var style = window.getComputedStyle(element);
+	return style.getPropertyValue("height");
+      } else if (element.currentStyle) {
+	var currentHeight = element.currentStyle.height;
+	return currentHeight == "auto" ? element.offsetHeight : currentHeight;
+      }
+    }
+  }
   
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
+  yuanjs.height = height;
