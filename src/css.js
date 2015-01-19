@@ -34,7 +34,15 @@
       }
     }
   }
+
+  function position(element) {
+    return {
+      "left": element.offsetLeft,
+      "top": element.offsetTop
+    };
+  }
   
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
+  yuanjs.position = position;
