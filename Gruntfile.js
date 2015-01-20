@@ -3,6 +3,7 @@
   var srcFiles = [
     'src/open.js',
     'src/debugger.js',
+    'src/attr.js',
     'src/deferred.js',
     'src/helper.js',
     'src/ajax.js',
