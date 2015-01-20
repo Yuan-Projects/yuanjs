@@ -1,8 +1,15 @@
   function css(element, name, value) {
+    var translations = {
+      "float": ["cssFloat", "styleFloat"]
+    };
     name = name.replace(/-([a-z])/ig, 
 	function(all, letter){ 
 	  return letter.toUpperCase(); 
 	});
+
+    if (translations[name]) {
+      name = typeof element.style[translations[name][0]] !== "undefined" ?  translations[name][0] : translations[name][1];
+    } 
 
     if (typeof value !== "undefined") {
       element.style[name] = value;
