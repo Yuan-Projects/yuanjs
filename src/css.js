@@ -1,3 +1,16 @@
+  function css(element, name, value) {
+    name = name.replace(/-([a-z])/ig, 
+	function(all, letter){ 
+	  return letter.toUpperCase(); 
+	});
+
+    if (typeof value !== "undefined") {
+      element.style[name] = value;
+    }
+
+    return element.style[name];
+  }
+
   function hasClass(element, className) {
     var originalClassName = element.className;
     if (!originalClassName) {
@@ -67,3 +80,4 @@
   yuanjs.height = height;
   yuanjs.position = position;
   yuanjs.offset = offset;
+  yuanjs.css = css;
