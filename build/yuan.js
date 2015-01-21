@@ -47,6 +47,10 @@
       }
     }
 
+    if (property === "href") {
+      return element.getAttribute("href", 2);
+    }
+
     if (specialAttributes.indexOf(property) != -1) {
       return element.getAttributeNode(property).nodeValue; 
     }
