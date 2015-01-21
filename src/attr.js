@@ -22,7 +22,7 @@
     var property = translations[name] || name,
         propertyExists = typeof element[property] !== "undefined";
         
-    if (typeof value !== "undefined") {
+    if (typeof value !== "undefined" && property != "type") {
       if (propertyExists) {
         element[property] = value;
       } else {
