@@ -39,7 +39,7 @@
     var property = translations[name] || name,
         propertyExists = typeof element[property] !== "undefined";
         
-    if (typeof value !== "undefined") {
+    if (typeof value !== "undefined" && property != "type") {
       if (propertyExists) {
         element[property] = value;
       } else {
@@ -49,6 +49,9 @@
 
     if (property === "href") {
       return element.getAttribute("href", 2);
+    }
+    if (property === "style") {
+      return typeof element.style.cssText === "string" ? element.style.cssText : element.getAttribute("style");
     }
 
     if (specialAttributes.indexOf(property) != -1) {
