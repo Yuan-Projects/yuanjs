@@ -18,6 +18,7 @@
       "frameborder": "frameBorder",
       "contenteditable": "contentEditable"
     };
+    var specialAttributes = ["id", "action"];
     var property = translations[name] || name,
         propertyExists = typeof element[property] !== "undefined";
         
@@ -27,6 +28,10 @@
       } else {
         element.setAttribute(name, value);
       }
+    }
+
+    if (specialAttributes.indexOf(property) != -1) {
+      return element.getAttributeNode(property).nodeValue; 
     }
     
     return propertyExists ? element[property] : element.getAttribute(name);
