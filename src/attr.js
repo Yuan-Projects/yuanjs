@@ -33,6 +33,9 @@
     if (property === "href") {
       return element.getAttribute("href", 2);
     }
+    if (property === "style") {
+      return typeof element.style.cssText === "string" ? element.style.cssText : element.getAttribute("style");
+    }
 
     if (specialAttributes.indexOf(property) != -1) {
       return element.getAttributeNode(property).nodeValue; 
