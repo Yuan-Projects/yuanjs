@@ -822,7 +822,21 @@
     if (name === "opacity") {
       return getOpacity(element);
     }
-    return element.style[name];
+    //return element.style[name];
+    return fetchComputedStyle(element, name);
+  }
+
+  function fetchComputedStyle(element, property) {
+    if (window.getComputedStyle) {
+      var computedStyle = window.getComputedStyle(element);
+      if (computedStyle) {
+	property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+	return computedStyle.getPropertyValue(property);
+      }
+    } else if (element.currentStyle) {
+      property = property.replace(/-([a-z])/ig, function(all, letter) { return letter.toUpperCase(); });
+      return element.currentStyle[property];
+    }
   }
 
   function hasClass(element, className) {
