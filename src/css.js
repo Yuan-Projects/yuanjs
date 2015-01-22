@@ -1,3 +1,32 @@
+  function isVisible(element) {
+    return !(element.offsetHeight === 0 && element.offsetWidth === 0);
+  }
+
+  /**
+   * Get the top and height value for hidden elements. 
+   */
+  function getDimensions(element) {
+    var properties = {
+      position: "absolute",
+      visibility: "hidden",
+      display: "block"
+    };
+
+    var previous = {};
+    for ( var prop in properties){
+      previous[prop] = element.style[prop];
+      element.style[prop] = properties[prop];
+    }
+    var result = {
+      width: element.offsetWidth,
+      height: element.offsetHeight
+    };
+    for (prop in properties) {
+      element.style[prop] = previous[prop];
+    }
+    return result;
+  }
+
   function css(element, name, value) {
     var translations = {
       "float": ["cssFloat", "styleFloat"]
@@ -31,6 +60,9 @@
     if (newWidth) {
       element.style.width = newWidth;
     } else {
+      if (!isVisible(element)) {
+	return getDimensions(element).width;
+      }
       if (window.getComputedStyle) {
 	var style = window.getComputedStyle(element);
 	return style.getPropertyValue("width");
@@ -45,6 +77,9 @@
     if (newHeight) {
       element.style.height = newHeight;
     } else {
+      if (!isVisible(element)) {
+	return getDimensions(element).height;
+      }
       if (window.getComputedStyle) {
 	var style = window.getComputedStyle(element);
 	return style.getPropertyValue("height");
