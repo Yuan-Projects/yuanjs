@@ -2,6 +2,28 @@
     return !(element.offsetHeight === 0 && element.offsetWidth === 0);
   }
 
+  function isOpacitySupported() {
+    var div = document.createElement("div");
+    div.setAttribute("style", "opacity:.5");
+    return div.style.opacity === "0.5";
+  }
+
+  function getOpacity(element) {
+    var defaultValue = 1.0;
+    if (isOpacitySupported()) {
+      return parseFloat(element.style.opacity) || defaultValue; 
+    } else {
+      if (element.style.cssText) {
+	var regExp = /alpha\(.*opacity=(\d+).*\)/i;
+	var matchResult = element.style.cssText.match(regExp);
+	if (matchResult && matchResult[1]) {
+	  return parseFloat(matchResult[1] / 100);
+	}
+      }
+    }
+    return defaultValue;
+  }
+
   /**
    * Get the top and height value for hidden elements. 
    */
@@ -44,6 +66,9 @@
       element.style[name] = value;
     }
 
+    if (name === "opacity") {
+      return getOpacity(element);
+    }
     return element.style[name];
   }
 
