@@ -1,11 +1,13 @@
-  // Poly fill for IE 6
-  if (!window.console) {
-    window.console = {
-      log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var str = args.join("\n");
-        alert(str);
+
+  function log() {
+    try {
+      console.log.apply(console, arguments);
+    } catch (e) {
+      try {
+	opera.postError.apply(opera, arguments);
+      } catch(err) {
+	alert(Array.prototype.join.call(arguments, " "));
       }
-    };
+    }
   }
-  yuanjs.console = window.console;
+  yuanjs.log = log;
