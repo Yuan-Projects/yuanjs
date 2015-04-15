@@ -13,6 +13,7 @@
     'src/data.js',
     'src/domEvents.js',
     'src/css.js',
+    'src/object.js',
     'src/close.js'
   ];
 
