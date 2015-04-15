@@ -15,7 +15,7 @@ Supported browsers:
  * Safari
  * Opera
 
-How to build your own YuanJS
+## How to build your own YuanJS
 
 Clone a copy of the main YuanJS git repo by running:
 git clone https://github.com/rainyjune/yuanjs.git
