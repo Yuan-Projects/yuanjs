@@ -198,6 +198,26 @@
     return new cssMatrixObject(matrixString);
   }
   
+  function getTransitionEndEventName() {
+    var i,
+      undefined,
+      el = document.createElement('div'),
+      transitions = {
+        'WebkitTransition':'webkitTransitionEnd',
+        'transition':'transitionend',
+        'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
+        'MozTransition':'transitionend'
+      };
+    
+    for (i in transitions) {
+      if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+        return transitions[i];
+      }
+    }
+    //TODO: throw 'TransitionEnd event is not supported in this browser';
+    return '';
+  }
+  
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
@@ -206,3 +226,4 @@
   yuanjs.css = css;
   yuanjs.getTranslateXValue = getTranslateXValue;
   yuanjs.getTranslateYValue = getTranslateYValue;
+  yuanjs.getTransitionEndEventName = getTransitionEndEventName;
