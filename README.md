@@ -23,5 +23,5 @@ Clone a copy of the main YuanJS git repo by running:
 
 Enter the YuanJS directory and install required grunt plugins:
 
-    cde yuanjs && npm install && grunt
+    cd yuanjs && npm install && grunt
 
