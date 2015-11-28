@@ -17,7 +17,7 @@ function extend() {
       for (prop in src) {
         if (src.hasOwnProperty(prop)) {
           if (toString.call(src[prop]) == '[object Object]') {
-            result[prop] = cp(result[prop] || {}, src[prop]);
+            result[prop] = extend(result[prop] || {}, src[prop]);
           } else {
             result[prop] = src[prop];
           }
