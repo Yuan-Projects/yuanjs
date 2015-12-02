@@ -3,16 +3,6 @@
   "use strict";
   var yuanjs = {};
 
-  // Poly fill for IE 6
-  if (!window.console) {
-    window.console = {
-      log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var str = args.join("\n");
-        alert(str);
-      }
-    };
-  }
 
   function log() {
     try {
@@ -25,7 +15,6 @@
       }
     }
   }
-  yuanjs.console = window.console;
   yuanjs.log = log;
 
   /**
@@ -928,6 +917,26 @@
   yuanjs.position = position;
   yuanjs.offset = offset;
   yuanjs.css = css;
+
+function extend(destination, source) {
+  for (var property in source) {
+    destination[property] = source[property];
+  }
+  return destination;
+}
+function namespace(str, value) {
+  var arr = str.split("."), obj = window;
+  for ( var i = 0, len = arr.length, len2 = len - 1; i < len; i++) {
+    if (i === len2) {
+      obj[arr[i]] = value;
+    } else {
+      obj[arr[i]] = obj[arr[i]] || {};
+      obj = obj[arr[i]];
+    }
+  }
+}
+yuanjs.extend = extend;
+yuanjs.namespace = namespace;
 
 
   if ( typeof module != 'undefined' && module.exports ) {

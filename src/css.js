@@ -156,9 +156,101 @@
     };
   }
   
+  function getTranslateXValue(domElement) {
+    var val = getTranslateValue(domElement);
+    return val.m41;
+  }
+
+  function getTranslateYValue(domElement) {
+    var val = getTranslateValue(domElement);
+    return val.m42;
+  }
+
+  /**
+   * Return the CSS3 translate value of a DOM element. 
+   * Note: IE 9+
+   * @param {Object} domElement : A native DOM element
+   * @returns {mixed}
+   */
+  function getTranslateValue(domElement) {
+    var cssMatrixObject = null;
+    if (typeof WebKitCSSMatrix !== "undefined") {
+      cssMatrixObject = WebKitCSSMatrix;
+    } else if (typeof MSCSSMatrix !== "undefined") {
+      cssMatrixObject = MSCSSMatrix;
+    } else if (typeof DOMMatrix !== "undefined") {
+      cssMatrixObject = DOMMatrix;
+    }
+
+    var style = window.getComputedStyle(domElement);
+
+    var matrixString = '';
+    if (typeof style.webkitTransform !== "undefined") {
+      matrixString = style.webkitTransform;
+    } else if (typeof style.mozTransform !== "undefined") {
+      matrixString = style.mozTransform;
+    } else if (typeof style.msTransform !== "undefined") {
+      matrixString = style.msTransform;
+    } else if (typeof style.transform !== "undefined") {
+      matrixString = style.transform;
+    }
+
+    return new cssMatrixObject(matrixString);
+  }
+  
+  function getTransitionEndEventName() {
+    var i,
+      undefined,
+      el = document.createElement('div'),
+      transitions = {
+        'WebkitTransition':'webkitTransitionEnd',
+        'transition':'transitionend',
+        'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
+        'MozTransition':'transitionend'
+      };
+    
+    for (i in transitions) {
+      if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+        return transitions[i];
+      }
+    }
+    //TODO: throw 'TransitionEnd event is not supported in this browser';
+    return '';
+  }
+  
+  function has3dTransforms(){
+      var el = document.createElement('p'),
+      has3d,
+      transforms = {
+          'webkitTransform':'-webkit-transform',
+          'OTransform':'-o-transform',
+          'msTransform':'-ms-transform',
+          'MozTransform':'-moz-transform',
+          'transform':'transform'
+      };
+   
+      // Add it to the body to get the computed style
+      document.body.insertBefore(el, null);
+   
+      for(var t in transforms){
+          if( el.style[t] !== undefined ){
+              el.style[t] = 'translate3d(1px,1px,1px)';
+              has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+          }
+      }
+   
+      document.body.removeChild(el);
+   
+      return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+  }
+  
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
   yuanjs.position = position;
   yuanjs.offset = offset;
   yuanjs.css = css;
+  yuanjs.getTranslateXValue = getTranslateXValue;
+  yuanjs.getTranslateYValue = getTranslateYValue;
+  yuanjs.getTransitionEndEventName = getTransitionEndEventName;
+  yuanjs.has3dTransforms = has3dTransforms;
