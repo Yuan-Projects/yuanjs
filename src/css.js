@@ -200,7 +200,6 @@
   
   function getTransitionEndEventName() {
     var i,
-      undefined,
       el = document.createElement('div'),
       transitions = {
         'WebkitTransition':'webkitTransitionEnd',

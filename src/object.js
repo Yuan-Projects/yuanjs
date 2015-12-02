@@ -35,15 +35,15 @@ function extend() {
  * var args = Array.prototype.slice.call(arguments);
  * But it prevents optimizations in JavaScript engines(V8 for example).
  * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
- * @param {object} arguments The Array-like object.
+ * @param {object} args The Array-like object.
  * @return {array}
  */
-function getArgumentsArray(arguments) {
+function getArgumentsArray(args) {
   var result = [],
-      len = arguments.length,
+      len = args.length,
       i;
   for (i = 0; i < len; i++) {
-    result.push(arguments[i]);
+    result.push(args[i]);
   }
   return result;
 }
