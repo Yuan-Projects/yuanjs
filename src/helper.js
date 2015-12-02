@@ -11,8 +11,8 @@
           if (!data.hasOwnProperty(name)) continue; // Skip inherited
           if (typeof data[name] === "function") continue; // Skip methods
           var value = data[name].toString(); // Value as string
-          name = encodeURIComponent(name.replace(" ", "+")); // Encode name
-          value = encodeURIComponent(value.replace(" ", "+")); // Encode value
+          name = encodeURIComponent(name); // Encode name
+          value = encodeURIComponent(value); // Encode value
           pairs.push(name + "=" + value); // Remember name=value pair
       }
       return pairs.join('&'); // Return joined pairs separated with &
