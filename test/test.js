@@ -24,11 +24,10 @@ describe("The Ajax Feature Tests", function() {
           description: "a web developer"
         },
         success: function(data) {
-          if (data.name === "kang" && data.description === "a web developer") {
-            done();
-          } else {
-            throw new Error("unexpected payload data");
-          }
+          catchError(function() {
+            expect(data.name).to.equal("kang");
+            expect(data.description).to.equal("a web developer");
+          }, done);
         },
         error: function(xhrStatus, xhr) {
           throw new Error(xhrStatus);
@@ -37,3 +36,16 @@ describe("The Ajax Feature Tests", function() {
     });
   });
 });
+
+/**
+ * Let Mocha catch exceptions that are thrown within a callback.
+ * http://stackoverflow.com/questions/19914810/20377340
+ */
+function catchError(fn, done) {
+  try {
+    fn();
+    done();
+  } catch(e) {
+    done(e);
+  }
+}
