@@ -140,8 +140,8 @@
           if (!data.hasOwnProperty(name)) continue; // Skip inherited
           if (typeof data[name] === "function") continue; // Skip methods
           var value = data[name].toString(); // Value as string
-          name = encodeURIComponent(name.replace(" ", "+")); // Encode name
-          value = encodeURIComponent(value.replace(" ", "+")); // Encode value
+          name = encodeURIComponent(name); // Encode name
+          value = encodeURIComponent(value); // Encode value
           pairs.push(name + "=" + value); // Remember name=value pair
       }
       return pairs.join('&'); // Return joined pairs separated with &
@@ -325,6 +325,8 @@
         var contentType = options.contentType || "application/x-www-form-urlencoded";
         var timeout = (options.timeout && !isNaN(options.timeout) && options.timeout > 0) ? options.timeout : 0;
         var timedout = false;
+        var headers = Object.prototype.toString.call(options.headers) === "[object Object]" ? options.headers : null;
+
         if(timeout) {
             var timer = setTimeout(function() {
                 timedout = true;
@@ -347,6 +349,13 @@
         }
 
         xhr.setRequestHeader("Content-Type", contentType);
+        if (headers) {
+          for (var prop in headers) {
+            if (headers.hasOwnProperty(prop)) {
+              xhr.setRequestHeader(prop, headers[prop]);
+            }
+          }
+        }
 
         switch(type) {
             case "POST":
@@ -397,6 +406,7 @@
     }
     yuanjs.ajax = ajax;
     
+
   /**
    * DOM Manipulation
    *
@@ -911,19 +921,154 @@
     };
   }
   
+  function getTranslateXValue(domElement) {
+    var val = getTranslateValue(domElement);
+    return val.m41;
+  }
+
+  function getTranslateYValue(domElement) {
+    var val = getTranslateValue(domElement);
+    return val.m42;
+  }
+
+  /**
+   * Return the CSS3 translate value of a DOM element. 
+   * Note: IE 9+
+   * @param {Object} domElement : A native DOM element
+   * @returns {mixed}
+   */
+  function getTranslateValue(domElement) {
+    var cssMatrixObject = null;
+    if (typeof WebKitCSSMatrix !== "undefined") {
+      cssMatrixObject = WebKitCSSMatrix;
+    } else if (typeof MSCSSMatrix !== "undefined") {
+      cssMatrixObject = MSCSSMatrix;
+    } else if (typeof DOMMatrix !== "undefined") {
+      cssMatrixObject = DOMMatrix;
+    }
+
+    var style = window.getComputedStyle(domElement);
+
+    var matrixString = '';
+    if (typeof style.webkitTransform !== "undefined") {
+      matrixString = style.webkitTransform;
+    } else if (typeof style.mozTransform !== "undefined") {
+      matrixString = style.mozTransform;
+    } else if (typeof style.msTransform !== "undefined") {
+      matrixString = style.msTransform;
+    } else if (typeof style.transform !== "undefined") {
+      matrixString = style.transform;
+    }
+
+    return new cssMatrixObject(matrixString);
+  }
+  
+  function getTransitionEndEventName() {
+    var i,
+      el = document.createElement('div'),
+      transitions = {
+        'WebkitTransition':'webkitTransitionEnd',
+        'transition':'transitionend',
+        'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
+        'MozTransition':'transitionend'
+      };
+    
+    for (i in transitions) {
+      if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+        return transitions[i];
+      }
+    }
+    //TODO: throw 'TransitionEnd event is not supported in this browser';
+    return '';
+  }
+  
+  function has3dTransforms(){
+      var el = document.createElement('p'),
+      has3d,
+      transforms = {
+          'webkitTransform':'-webkit-transform',
+          'OTransform':'-o-transform',
+          'msTransform':'-ms-transform',
+          'MozTransform':'-moz-transform',
+          'transform':'transform'
+      };
+   
+      // Add it to the body to get the computed style
+      document.body.insertBefore(el, null);
+   
+      for(var t in transforms){
+          if( el.style[t] !== undefined ){
+              el.style[t] = 'translate3d(1px,1px,1px)';
+              has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
+          }
+      }
+   
+      document.body.removeChild(el);
+   
+      return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+  }
+  
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
   yuanjs.position = position;
   yuanjs.offset = offset;
   yuanjs.css = css;
+  yuanjs.getTranslateXValue = getTranslateXValue;
+  yuanjs.getTranslateYValue = getTranslateYValue;
+  yuanjs.getTransitionEndEventName = getTransitionEndEventName;
+  yuanjs.has3dTransforms = has3dTransforms;
 
-function extend(destination, source) {
-  for (var property in source) {
-    destination[property] = source[property];
+/**
+ * Merge multiple objects dynamically with modifying either arguments.
+ * Inspired by http://stackoverflow.com/questions/171251#16178864
+ * @example extend(obj1, obj2, ....);
+ * @return {object} The merged object.
+ */
+function extend() {
+  var result = {}, 
+      src, 
+      prop, 
+      args = getArgumentsArray(arguments),
+      toString = Object.prototype.toString;
+      
+  while (args.length > 0) {
+    src = args.shift();
+    if (toString.call(src) === "[object Object]") {
+      for (prop in src) {
+        if (src.hasOwnProperty(prop)) {
+          if (toString.call(src[prop]) == '[object Object]') {
+            result[prop] = extend(result[prop] || {}, src[prop]);
+          } else {
+            result[prop] = src[prop];
+          }
+        }
+      }
+    }
   }
-  return destination;
+  return result;
 }
+
+/**
+ *
+ * Convert function arguments to an array.
+ * The arguments object can be converted to a real Array by using:
+ * var args = Array.prototype.slice.call(arguments);
+ * But it prevents optimizations in JavaScript engines(V8 for example).
+ * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
+ * @param {object} args The Array-like object.
+ * @return {array}
+ */
+function getArgumentsArray(args) {
+  var result = [],
+      len = args.length,
+      i;
+  for (i = 0; i < len; i++) {
+    result.push(args[i]);
+  }
+  return result;
+}
+
 function namespace(str, value) {
   var arr = str.split("."), obj = window;
   for ( var i = 0, len = arr.length, len2 = len - 1; i < len; i++) {
