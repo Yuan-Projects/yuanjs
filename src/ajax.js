@@ -17,6 +17,8 @@
         var contentType = options.contentType || "application/x-www-form-urlencoded";
         var timeout = (options.timeout && !isNaN(options.timeout) && options.timeout > 0) ? options.timeout : 0;
         var timedout = false;
+        var headers = Object.prototype.toString.call(options.headers) === "[object Object]" ? options.headers : null;
+
         if(timeout) {
             var timer = setTimeout(function() {
                 timedout = true;
@@ -39,6 +41,13 @@
         }
 
         xhr.setRequestHeader("Content-Type", contentType);
+        if (headers) {
+          for (var prop in headers) {
+            if (headers.hasOwnProperty(prop)) {
+              xhr.setRequestHeader(prop, headers[prop]);
+            }
+          }
+        }
 
         switch(type) {
             case "POST":
