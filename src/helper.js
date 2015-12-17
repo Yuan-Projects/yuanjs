@@ -10,6 +10,12 @@
       for(var name in data) { // For each name
           if (!data.hasOwnProperty(name)) continue; // Skip inherited
           if (typeof data[name] === "function") continue; // Skip methods
+          if (Object.prototype.toString.call(data[name]) === "[object Array]") {
+              for (var i = 0, len = data[name].length; i < len; i++) {
+                  pairs.push(encodeURIComponent(name) + "[]=" + encodeURIComponent(data[name][i].toString()));
+              }
+              continue;
+          }
           var value = data[name].toString(); // Value as string
           name = encodeURIComponent(name); // Encode name
           value = encodeURIComponent(value); // Encode value
