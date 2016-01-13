@@ -438,7 +438,10 @@
             if (completeCallBack) {
               completeCallBack(xhr, textStatus);
             }
-            if(xhr.status === 200) {
+            // Determine if successful
+            var status = xhr.status;
+            var isSuccess = status >= 200 && status < 300 || status === 304;
+            if(isSuccess) {
                 var resultType = xhr.getResponseHeader("Content-Type");
                 if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
                   if (successCallBack) {
@@ -456,7 +459,7 @@
                 dtd.resolve(xhr);
             } else {
               if (errorCallBack) {
-                errorCallBack(xhr.status, xhr);
+                errorCallBack(status, xhr);
               }
                 dtd.reject(xhr);
             }
