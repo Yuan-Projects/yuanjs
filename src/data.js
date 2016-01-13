@@ -1,14 +1,14 @@
 
   (function(){
     var cache = {},
-	guidCounter = 1,
-	expando = "data" + (new Date()).getTime();
+        guidCounter = 1,
+        expando = "data" + (new Date()).getTime();
     
     function getData(elem) {
       var guid = elem[expando];
       if (!guid) {
-	guid = elem[expando] = guidCounter++;
-	cache[guid] = {}; 
+        guid = elem[expando] = guidCounter++;
+        cache[guid] = {}; 
       }
       return cache[guid];
     }
@@ -18,11 +18,11 @@
       if (!guid) return;
       delete cache[guid];
       try {
-	delete elem[expando];
+        delete elem[expando];
       } catch (e) {
-	if (elem.removeAttribute) {
-	  elem.removeAttribute(expando);
-	}
+        if (elem.removeAttribute) {
+          elem.removeAttribute(expando);
+        }
       }
     }
 
