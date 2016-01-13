@@ -89,6 +89,21 @@ describe("The Ajax Feature Tests", function() {
   
 });
 
+describe("The DOM Events tests", function(){
+  context('HTTP Post Tests', function() {
+    it("The documentReady function test 1", function(done) {
+      yuanjs.documentReady(function(){
+        done();
+      });
+    });
+    it("The documentReady function test 2", function(done) {
+      yuanjs.documentReady(function(){
+        done();
+      });
+    });
+  });
+});
+
 /**
  * Let Mocha catch exceptions that are thrown within a callback.
  * http://stackoverflow.com/questions/19914810/20377340
