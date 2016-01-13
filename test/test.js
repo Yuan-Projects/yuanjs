@@ -1,5 +1,6 @@
 describe("The Ajax Feature Tests", function() {
   describe("HTTP Get Test", function() {
+
     it('Should get the content of test.json without error', function(done) {
       yuanjs.ajax({
         url: 'test.json',
@@ -11,6 +12,35 @@ describe("The Ajax Feature Tests", function() {
         }
       });
     });
+    
+    it('Should works fine with a URL containing a question mark', function(done) {
+      yuanjs.ajax({
+        url: 'test.json?v=1',
+        success: function(data) {
+          done();
+        },
+        error: function(xhrStatus, xhr) {
+          throw new Error(xhrStatus);
+        }
+      });
+    });
+
+    it('Should works fine with a URL containing a question mark and the data parameter', function(done) {
+      yuanjs.ajax({
+        url: 'getJSON.php?v=1',
+        data: {a:1, b:2},
+        dataType: "json",
+        success: function(data) {
+          catchError(function(){
+            expect(data).to.eql({v: 1, a: 1, b: 2});
+          }, done);
+        },
+        error: function(xhrStatus, xhr) {
+          throw new Error(xhrStatus);
+        }
+      });
+    });
+    
   });
   
   // POST Tests
@@ -35,6 +65,7 @@ describe("The Ajax Feature Tests", function() {
       });
     });
   });
+  
 });
 
 /**
