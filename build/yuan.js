@@ -396,7 +396,7 @@
         }
 
         if(type === "GET" && data !== "") {
-            url += "?" + data;
+            url += (url.indexOf("?") === -1 ? "?" : "&") + data;
         }
         xhr.open(type, url, isAsyc);
         if(isAsyc) {
