@@ -64,6 +64,27 @@ describe("The Ajax Feature Tests", function() {
         }
       });
     });
+    
+    it('Should fail when sendding request to a URL that does not exist', function(done) {
+      yuanjs.ajax({
+        url: 'nonexist.php',
+        type: 'POST',
+        data: {
+          name: "kang",
+          description: "a web developer"
+        },
+        success: function(data) {
+          throw new Error("This request should fail");
+          
+        },
+        error: function(xhrStatus, xhr) {
+          catchError(function(){
+            expect(xhrStatus).to.equal(404);
+          }, done);
+        }
+      });
+    });
+    
   });
   
 });
