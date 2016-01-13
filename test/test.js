@@ -90,7 +90,7 @@ describe("The Ajax Feature Tests", function() {
 });
 
 describe("The DOM Events tests", function(){
-  context('HTTP Post Tests', function() {
+  context('Browser Events Tests', function() {
     it("The documentReady function test 1", function(done) {
       yuanjs.documentReady(function(){
         done();
