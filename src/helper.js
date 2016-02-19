@@ -219,7 +219,7 @@
     return /^\s*$/.test(param);
   }
   
-  
+  // http://stackoverflow.com/a/15604206
   function replaceAll(str,mapObj) {
     var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
 
