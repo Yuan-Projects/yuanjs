@@ -195,7 +195,7 @@
           }
           readyEventHandlersInstalled = true;
         }
-      }
+      };
     })("documentReady", yuanjs);
 
     yuanjs.addEvent = addEvent;
