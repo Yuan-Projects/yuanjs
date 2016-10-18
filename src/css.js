@@ -94,20 +94,42 @@
     var classRegExp = new RegExp("\\b" + className + "\\b");
     return classRegExp.test(originalClassName);
   }
+  
+  function getWindowSize() {
+    var pageWidth = window.innerWidth,
+        pageHeight = window.innerHeight;
+    if (typeof pageWidth != "number") {
+      if (document.compatMode == "CSS1Compat") {
+        pageWidth = document.documentElement.clientWidth;
+        pageHeight = document.documentElement.clientHeight;
+      } else {
+        pageWidth = document.body.clientWidth;
+        pageHeight = document.body.clientHeight;
+      }
+    }
+    return {
+      width: pageWidth,
+      height: pageHeight
+    };
+  }
 
   function width(element, newWidth) {
     if (newWidth) {
       element.style.width = newWidth;
     } else {
+      if (element === window) {
+        var windowSize = getWindowSize();
+        return windowSize.width;
+      }
       if (!isVisible(element)) {
-	return getDimensions(element).width;
+        return getDimensions(element).width;
       }
       if (window.getComputedStyle) {
-	var style = window.getComputedStyle(element);
-	return style.getPropertyValue("width");
+        var style = window.getComputedStyle(element);
+        return style.getPropertyValue("width");
       } else if (element.currentStyle) {
-	var currentWidth = element.currentStyle.width;
-	return currentWidth == "auto" ? element.offsetWidth : currentWidth;
+        var currentWidth = element.currentStyle.width;
+        return currentWidth == "auto" ? element.offsetWidth : currentWidth;
       }
     }
   }
