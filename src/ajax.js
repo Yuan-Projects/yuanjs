@@ -107,6 +107,8 @@
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = src;
+    script.async = true;
+    script.charset = "UTF-8";
     
     // Attach handlers for all browsers
     script.onload = script.onreadystatechange = function() {
