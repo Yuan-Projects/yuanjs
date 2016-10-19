@@ -102,6 +102,7 @@
     yuanjs.ajax = ajax;
     
   function loadScript(src, successCallback, errorCallback) {
+    var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = src;
@@ -121,7 +122,7 @@
         }
       };
     }
-    document.body.appendChild(script);
+    head.insertBefore( script, head.firstChild );
   }
   
   yuanjs.loadScript = loadScript;
