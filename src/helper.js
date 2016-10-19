@@ -204,7 +204,7 @@
   }
   
   function isFunction(param) {
-    return Object.prototype.toString.call(x) === '[object Function]';
+    return Object.prototype.toString.call(param) === '[object Function]';
   }
   
   function isNull(param) {
