@@ -101,28 +101,42 @@
     }
     yuanjs.ajax = ajax;
     
+  // Inspired by jQuery
   function loadScript(src, successCallback, errorCallback) {
     var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
     var script = document.createElement('script');
     script.type = "text/javascript";
     script.src = src;
-    if("onload" in script) {
-      script.onload = successCallback;
-      script.onerror = errorCallback;
-    } else if ("onreadystatechange" in script) {
-      // onreadystatechange is not a reliable way to detect script file load status
-      // It's your responsibility to check whether it's loaded successfully or not!
-      script.onreadystatechange = function() {
-        var readyState = script.readyState;
-        // readyState property 
-        // https://msdn.microsoft.com/en-us/library/ms534359(v=vs.85).aspx
-        if (readyState === "complete" || readyState === "loaded") {
-          script.onreadystatechange = null;
-          successCallback();
+    
+    // Attach handlers for all browsers
+    script.onload = script.onreadystatechange = function() {
+      var readyState = script.readyState;
+      if (!readyState || /loaded|complete/.test(readyState)) {
+        
+        // Handle memory leak in IE
+        script.onload = script.onreadystatechange = null;
+        
+        // Remove the script
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
         }
+        
+        // Dereference the script
+        script = null;
+        
+        // Callback 
+        successCallback();
+      }
+    };
+    
+    if("onerror" in script) {
+      script.onerror = function(){
+        errorCallback();
       };
     }
-    head.insertBefore( script, head.firstChild );
+    // Circumvent IE6 bugs with base elements by prepending
+	  // Use native DOM manipulation to avoid our domManip AJAX trickery
+    head.insertBefore(script, head.firstChild);
   }
   
   yuanjs.loadScript = loadScript;
