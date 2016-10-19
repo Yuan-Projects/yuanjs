@@ -101,3 +101,27 @@
     }
     yuanjs.ajax = ajax;
     
+  function loadScript(src, successCallback, errorCallback) {
+    var script = document.createElement('script');
+    script.type = "text/javascript";
+    script.src = src;
+    if("onload" in script) {
+      script.onload = successCallback;
+      script.onerror = errorCallback;
+    } else if ("onreadystatechange" in script) {
+      // onreadystatechange is not a reliable way to detect script file load status
+      // It's your responsibility to check whether it's loaded successfully or not!
+      script.onreadystatechange = function() {
+        var readyState = script.readyState;
+        // readyState property 
+        // https://msdn.microsoft.com/en-us/library/ms534359(v=vs.85).aspx
+        if (readyState === "complete" || readyState === "loaded") {
+          script.onreadystatechange = null;
+          successCallback();
+        }
+      };
+    }
+    document.body.appendChild(script);
+  }
+  
+  yuanjs.loadScript = loadScript;
