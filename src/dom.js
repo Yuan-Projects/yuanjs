@@ -103,8 +103,21 @@
     }
   }
   
+  function text(element, newText) {
+    if (newText === undefined) {
+      return (typeof element.textContent === "string") ? element.textContent : element.innerText;
+    } else if (typeof newText === "string") {
+      if (typeof element.textContent === "string") {
+        element.textContent = newText;
+      } else {
+        element.innerText = newText;
+      }
+    }
+  }
+  
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
   yuanjs.matchesSelector = matchesSelector;
   yuanjs.contains = contains;
+  yuanjs.text = text;
