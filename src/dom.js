@@ -69,7 +69,24 @@
     }
     return nodes;
   }
+  
+  function matchesSelector(element, selector){
+    if (element.matches) {
+      return element.matches(selector);
+    } else if (element.matchesSelector){
+      return element.matchesSelector(selector);
+    } else if (element.msMatchesSelector){
+      return element.msMatchesSelector(selector);
+    } else if (element.mozMatchesSelector){
+      return element.mozMatchesSelector(selector);
+    } else if (element.webkitMatchesSelector){
+      return element.webkitMatchesSelector(selector);
+    } else {
+      throw new Error("Not supported.");
+    }
+  }
+  
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
-
+  yuanjs.matchesSelector = matchesSelector;
