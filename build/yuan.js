@@ -1,8 +1,17 @@
 (function (window, undefined) {
   /* jshint -W034 */
   "use strict";
+  
+  // Save the previous value of the `yuanjs` variable, so that it can be restored later on, if ｀noConflict｀ is used.
+  var previousYuanJS = window.yuanjs;
+  
   var yuanjs = {};
-  yuanjs.version = "0.0.2";
+  yuanjs.version = "0.0.3";
+  
+  yuanjs.noConflict = function() {
+    window.yuanjs = previousYuanJS;
+    return this;
+  };
 
 
   function log() {
@@ -334,7 +343,7 @@
   }
   
   function isFunction(param) {
-    return Object.prototype.toString.call(x) === '[object Function]';
+    return Object.prototype.toString.call(param) === '[object Function]';
   }
   
   function isNull(param) {
@@ -357,6 +366,22 @@
         return mapObj[matched.toLowerCase()];
     });
   }
+  
+  function urlArgs() {
+    var args = {};                             // Start with an empty object
+    var query = location.search.substring(1);  // Get query string, minus '?'
+    var pairs = query.split("&");              // Split at ampersands
+    for(var i = 0; i < pairs.length; i++) {    // For each fragment
+        var pos = pairs[i].indexOf('=');       // Look for "name=value"
+        if (pos == -1) continue;               // If not found, skip it
+        var name = pairs[i].substring(0,pos);  // Extract the name
+        var value = pairs[i].substring(pos+1); // Extract the value
+        name = decodeURIComponent(name);       // Decode the name
+        value = decodeURIComponent(value);     // Decode the value
+        args[name] = value;                    // Store as a property
+    }
+    return args;                               // Return the parsed arguments
+  }
 
   yuanjs.isNumber = isNumber;
   yuanjs.isString = isString;
@@ -365,6 +390,7 @@
   yuanjs.isUndefined = isUndefined;
   yuanjs.isEmpty = isEmpty;
   yuanjs.replaceAll = replaceAll;
+  yuanjs.urlArgs = urlArgs;
 
     /**
      * Ajax request
@@ -469,7 +495,47 @@
     }
     yuanjs.ajax = ajax;
     
-
+  // Inspired by jQuery
+  function loadScript(src, successCallback, errorCallback) {
+    var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
+    var script = document.createElement('script');
+    script.type = "text/javascript";
+    script.src = src;
+    script.async = true;
+    script.charset = "UTF-8";
+    
+    // Attach handlers for all browsers
+    script.onload = script.onreadystatechange = function() {
+      var readyState = script.readyState;
+      if (!readyState || /loaded|complete/.test(readyState)) {
+        
+        // Handle memory leak in IE
+        script.onload = script.onreadystatechange = null;
+        
+        // Remove the script
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+        
+        // Dereference the script
+        script = null;
+        
+        // Callback 
+        successCallback();
+      }
+    };
+    
+    if("onerror" in script) {
+      script.onerror = function(){
+        errorCallback();
+      };
+    }
+    // Circumvent IE6 bugs with base elements by prepending
+	  // Use native DOM manipulation to avoid our domManip AJAX trickery
+    head.insertBefore(script, head.firstChild);
+  }
+  
+  yuanjs.loadScript = loadScript;
   /**
    * DOM Manipulation
    *
@@ -541,10 +607,58 @@
     }
     return nodes;
   }
+  
+  function matchesSelector(element, selector){
+    if (element.matches) {
+      return element.matches(selector);
+    } else if (element.matchesSelector){
+      return element.matchesSelector(selector);
+    } else if (element.msMatchesSelector){
+      return element.msMatchesSelector(selector);
+    } else if (element.mozMatchesSelector){
+      return element.mozMatchesSelector(selector);
+    } else if (element.webkitMatchesSelector){
+      return element.webkitMatchesSelector(selector);
+    } else {
+      throw new Error("Not supported.");
+    }
+  }
+  
+  function contains(parentNode, childNode) {
+    if (parentNode.compareDocumentPosition) {
+      return !!(parentNode.compareDocumentPosition(childNode) & 16);
+    } else if (typeof parentNode.contains === "function") {
+      return parentNode.contains(childNode);
+    } else {
+      if (childNode) {
+        while ((childNode = childNode.parentNode)) {
+          if (childNode === parentNode) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  }
+  
+  function text(element, newText) {
+    if (newText === undefined) {
+      return (typeof element.textContent === "string") ? element.textContent : element.innerText;
+    } else if (typeof newText === "string") {
+      if (typeof element.textContent === "string") {
+        element.textContent = newText;
+      } else {
+        element.innerText = newText;
+      }
+    }
+  }
+  
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
-
+  yuanjs.matchesSelector = matchesSelector;
+  yuanjs.contains = contains;
+  yuanjs.text = text;
 
     // Events on and off
     var Events = [];
@@ -991,20 +1105,37 @@
     var classRegExp = new RegExp("\\b" + className + "\\b");
     return classRegExp.test(originalClassName);
   }
+  
+  function getWindowSize() {
+    var pageWidth = window.innerWidth,
+        pageHeight = window.innerHeight;
+    if (typeof pageWidth != "number") {
+      pageWidth = document.documentElement.clientWidth;
+      pageHeight = document.documentElement.clientHeight;
+    }
+    return {
+      width: pageWidth,
+      height: pageHeight
+    };
+  }
 
   function width(element, newWidth) {
     if (newWidth) {
       element.style.width = newWidth;
     } else {
+      if (element === window) {
+        var windowSize = getWindowSize();
+        return windowSize.width;
+      }
       if (!isVisible(element)) {
-	return getDimensions(element).width;
+        return getDimensions(element).width;
       }
       if (window.getComputedStyle) {
-	var style = window.getComputedStyle(element);
-	return style.getPropertyValue("width");
+        var style = window.getComputedStyle(element);
+        return style.getPropertyValue("width");
       } else if (element.currentStyle) {
-	var currentWidth = element.currentStyle.width;
-	return currentWidth == "auto" ? element.offsetWidth : currentWidth;
+        var currentWidth = element.currentStyle.width;
+        return currentWidth == "auto" ? element.offsetWidth : currentWidth;
       }
     }
   }
