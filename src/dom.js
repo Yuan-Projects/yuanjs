@@ -86,7 +86,25 @@
     }
   }
   
+  function contains(parentNode, childNode) {
+    if (parentNode.compareDocumentPosition) {
+      return !!(parentNode.compareDocumentPosition(childNode) & 16);
+    } else if (typeof parentNode.contains === "function") {
+      return parentNode.contains(childNode);
+    } else {
+      if (childNode) {
+        while ((childNode = childNode.parentNode)) {
+          if (childNode === parentNode) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+  }
+  
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
   yuanjs.matchesSelector = matchesSelector;
+  yuanjs.contains = contains;
