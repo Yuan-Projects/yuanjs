@@ -87,6 +87,31 @@ describe("The Ajax Feature Tests", function() {
     
   });
   
+  context('Load Script Tests', function() {
+    // Suppress global leak errors in mocha
+    mocha.setup({globals: ['external']});
+    it('Should load a javascript file successfully', function(done) {
+      var fileSrc = 'external.js';
+      yuanjs.loadScript(fileSrc, function(){
+        done();
+      }, function(){
+        throw new Error('Load failed');
+      });
+    });
+    
+    it('Should failed to load a file that does not exist', function(done) {
+      var fileSrc = './nonexist.js';
+      yuanjs.loadScript(fileSrc, function(){
+        catchError(function(){
+          throw new Error('Loaded succesfully.');  
+        }, done);
+      }, function(){
+        done();
+      });
+    });
+    
+  });
+  
 });
 
 describe("The DOM Events tests", function(){
@@ -101,6 +126,55 @@ describe("The DOM Events tests", function(){
         done();
       });
     });
+  });
+});
+
+describe("Selectors tests", function(){
+  context('The matchesSelector() function', function() {
+    it("Works on the body tag", function(done) {
+      catchError(function(){
+        expect(yuanjs.matchesSelector(document.body, 'body')).to.be(true);
+      }, done);
+    });
+  });
+  
+  context('The contains() function', function() {
+    it("The document contains the body element", function(done) {
+      catchError(function(){
+        expect(yuanjs.contains(document.documentElement, document.body)).to.be(true);
+      }, done);
+    });
+  });
+  
+  context('The cssClass() function', function() {
+    it("Get all elements with a class containing one class name", function(done) {
+      catchError(function(){
+        expect(yuanjs.cssClass("cls1").length).to.be(1);
+      }, done);
+    });
+    
+    it("Get all elements with a class containing two class names", function(done) {
+      catchError(function(){
+        expect(yuanjs.cssClass("cls1 cls2").length).to.be(1);
+      }, done);
+    });
+  });
+  
+  context('The text() function', function() {
+    it("Get the inner text of a div", function(done) {
+      catchError(function(){
+        expect(yuanjs.text(document.getElementById('testDiv'))).to.equal("The default text");
+      }, done);
+    });
+    
+    it("Set the inner text of a div", function(done) {
+      catchError(function(){
+        var theDiv = document.getElementById('testDiv');
+        yuanjs.text(theDiv, "The new string");
+        expect(yuanjs.text(theDiv)).to.equal("The new string");
+      }, done);
+    });
+    
   });
 });
 
