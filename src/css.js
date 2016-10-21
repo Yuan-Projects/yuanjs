@@ -171,6 +171,26 @@
     };
   }
   
+  /**
+   * Get the current coordinates of the element, relative to the document.
+   * Note: Works on IE7+ 
+   */
+  function getOffset(elem) {
+    var current = elem.offsetParent,
+        actualLeft = elem.offsetLeft,
+        actualTop = elem.offsetTop;
+        
+    while ((current = current.offsetParent)) {
+      actualLeft += current.offsetLeft;
+      actualTop += current.offsetTop;
+    }
+    
+    return {
+      left: actualLeft,
+      top: actualTop
+    };
+  }
+  
   function getTranslateXValue(domElement) {
     var val = getTranslateValue(domElement);
     return val.m41;
@@ -233,29 +253,28 @@
   }
   
   function has3dTransforms(){
-      var el = document.createElement('p'),
-      has3d,
-      transforms = {
+    var el = document.createElement('p'),
+        has3d,
+        transforms = {
           'webkitTransform':'-webkit-transform',
           'OTransform':'-o-transform',
           'msTransform':'-ms-transform',
           'MozTransform':'-moz-transform',
           'transform':'transform'
-      };
-   
-      // Add it to the body to get the computed style
-      document.body.insertBefore(el, null);
-   
-      for(var t in transforms){
-          if( el.style[t] !== undefined ){
-              el.style[t] = 'translate3d(1px,1px,1px)';
-              has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-          }
+        };
+ 
+    // Add it to the body to get the computed style
+    document.body.insertBefore(el, null);
+ 
+    for(var t in transforms){
+      if( el.style[t] !== undefined ){
+        el.style[t] = 'translate3d(1px,1px,1px)';
+        has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
       }
-   
-      document.body.removeChild(el);
-   
-      return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+    }
+ 
+    document.body.removeChild(el);
+    return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
   
   yuanjs.hasClass = hasClass;
@@ -268,3 +287,4 @@
   yuanjs.getTranslateYValue = getTranslateYValue;
   yuanjs.getTransitionEndEventName = getTransitionEndEventName;
   yuanjs.has3dTransforms = has3dTransforms;
+  yuanjs.getOffset = getOffset;
