@@ -14,11 +14,11 @@
       return parseFloat(element.style.opacity) || defaultValue; 
     } else {
       if (element.style.cssText) {
-	var regExp = /alpha\(.*opacity=(\d+).*\)/i;
-	var matchResult = element.style.cssText.match(regExp);
-	if (matchResult && matchResult[1]) {
-	  return parseFloat(matchResult[1] / 100);
-	}
+        var regExp = /alpha\(.*opacity=(\d+).*\)/i;
+        var matchResult = element.style.cssText.match(regExp);
+        if (matchResult && matchResult[1]) {
+          return parseFloat(matchResult[1] / 100);
+        }
       }
     }
     return defaultValue;
@@ -53,10 +53,9 @@
     var translations = {
       "float": ["cssFloat", "styleFloat"]
     };
-    name = name.replace(/-([a-z])/ig, 
-	function(all, letter){ 
-	  return letter.toUpperCase(); 
-	});
+    name = name.replace(/-([a-z])/ig, function(all, letter){
+      return letter.toUpperCase();
+    });
 
     if (translations[name]) {
       name = typeof element.style[translations[name][0]] !== "undefined" ?  translations[name][0] : translations[name][1];
@@ -69,7 +68,6 @@
     if (name === "opacity") {
       return getOpacity(element);
     }
-    //return element.style[name];
     return fetchComputedStyle(element, name);
   }
 
@@ -77,8 +75,8 @@
     if (window.getComputedStyle) {
       var computedStyle = window.getComputedStyle(element);
       if (computedStyle) {
-	property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
-	return computedStyle.getPropertyValue(property);
+        property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+        return computedStyle.getPropertyValue(property);
       }
     } else if (element.currentStyle) {
       property = property.replace(/-([a-z])/ig, function(all, letter) { return letter.toUpperCase(); });
@@ -134,14 +132,14 @@
       element.style.height = newHeight;
     } else {
       if (!isVisible(element)) {
-	return getDimensions(element).height;
+        return getDimensions(element).height;
       }
       if (window.getComputedStyle) {
-	var style = window.getComputedStyle(element);
-	return style.getPropertyValue("height");
+        var style = window.getComputedStyle(element);
+        return style.getPropertyValue("height");
       } else if (element.currentStyle) {
-	var currentHeight = element.currentStyle.height;
-	return currentHeight == "auto" ? element.offsetHeight : currentHeight;
+        var currentHeight = element.currentStyle.height;
+        return currentHeight == "auto" ? element.offsetHeight : currentHeight;
       }
     }
   }
