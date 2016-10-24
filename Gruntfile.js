@@ -9,7 +9,6 @@
     'src/ajax.js',
     'src/dom.js',
     'src/events.js',
-    'src/fixup.js',
     'src/data.js',
     'src/domEvents.js',
     'src/css.js',
