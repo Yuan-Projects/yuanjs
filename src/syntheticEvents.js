@@ -33,14 +33,16 @@
         event.initEvent(eventName, params.bubbles, params.cancelable);
         event.detail = params.detail; // Attach the detail data to the event object
       } finally {
-        event = document.createEventObject();
-        event.type = eventName;
-        event.eventType = eventName;
-        var detail = params.detail;
-        if (detail) {
-          for (var prop in detail) {
-            if (detail.hasOwnProperty(prop)) {
-              event[prop] = detail[prop];
+        if (!event) {
+          event = document.createEventObject();
+          event.type = eventName;
+          event.eventType = eventName;
+          var detail = params.detail;
+          if (detail) {
+            for (var prop in detail) {
+              if (detail.hasOwnProperty(prop)) {
+                event[prop] = detail[prop];
+              }
             }
           }
         }
