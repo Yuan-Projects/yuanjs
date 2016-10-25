@@ -13,6 +13,7 @@
     'src/domEvents.js',
     'src/css.js',
     'src/object.js',
+    'src/syntheticEvents.js',
     'src/close.js'
   ];
 
