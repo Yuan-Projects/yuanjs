@@ -5,7 +5,7 @@
 
   function ajax(options) {
     var dtd = Deferred();
-    var xhr = new XMLHttpRequest();
+    var xhr = getXHR(options.crossDomain);
     var url = options.url;
     var type = options.type ? options.type.toUpperCase() : "GET";
     var isAsyc = !!options.asyc || true;
@@ -33,15 +33,27 @@
     }
     xhr.open(type, url, isAsyc);
     if(isAsyc) {
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          callBack();
-        }
-      };
+      if ("onreadystatechange" in xhr) {
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            callBack();
+          }
+        };
+      } else {
+        xhr.onload = callBack;
+        xhr.onerror = function(){
+          if (errorCallBack) {
+            errorCallBack(xhr);
+          }
+          dtd.reject(xhr);
+        };
+      }
     }
 
-    xhr.setRequestHeader("Content-Type", contentType);
-    if (headers) {
+    if (xhr.setRequestHeader) {
+      xhr.setRequestHeader("Content-Type", contentType);
+    }
+    if (headers && xhr.setRequestHeader) { // No custom headers may be added to the request in the XDomainRequest object
       for (var prop in headers) {
         if (headers.hasOwnProperty(prop)) {
           xhr.setRequestHeader(prop, headers[prop]);
@@ -59,6 +71,14 @@
     if(!isAsyc) {
       callBack();
     }
+    
+    function getXHR(crossDomain) {
+      var xhr = new XMLHttpRequest();
+      if (crossDomain && typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+      }
+      return xhr;
+    }
 
     function callBack() {
       if(timedout){
@@ -72,15 +92,37 @@
         completeCallBack(xhr, textStatus);
       }
       // Determine if successful
-      var status = xhr.status;
-      var isSuccess = status >= 200 && status < 300 || status === 304;
-      if(isSuccess) {
-        var resultType = xhr.getResponseHeader("Content-Type");
-        if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
+      if ("status" in xhr) {
+        var status = xhr.status;
+        var isSuccess = status >= 200 && status < 300 || status === 304;
+        if(isSuccess) {
+          var resultType = xhr.getResponseHeader("Content-Type");
+          if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
+            if (successCallBack) {
+              successCallBack(resultXML, xhr);
+            }
+          } else if(dataType === "json" || resultType === "application/json") {
+            if (successCallBack) {
+              successCallBack(JSON.parse(resultText), xhr);
+            }
+          }else{
+            if (successCallBack) {
+              successCallBack(resultText, xhr);
+            }
+          }
+          dtd.resolve(xhr);
+        } else {
+          if (errorCallBack) {
+            errorCallBack(status, xhr);
+          }
+          dtd.reject(xhr);
+        }        
+      } else { // XDomainRequest
+        if(dataType === "xml" || xhr.responseXML){
           if (successCallBack) {
             successCallBack(resultXML, xhr);
           }
-        } else if(dataType === "json" || resultType === "application/json") {
+        } else if(dataType === "json") {
           if (successCallBack) {
             successCallBack(JSON.parse(resultText), xhr);
           }
@@ -90,11 +132,6 @@
           }
         }
         dtd.resolve(xhr);
-      } else {
-        if (errorCallBack) {
-          errorCallBack(status, xhr);
-        }
-        dtd.reject(xhr);
       }
     }
     return dtd.promise();
