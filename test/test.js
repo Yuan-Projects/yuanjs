@@ -1,4 +1,5 @@
 describe("The Ajax Feature Tests", function() {
+  
   describe("HTTP Get Test", function() {
 
     it('Should get the content of test.json without error', function(done) {
@@ -85,6 +86,25 @@ describe("The Ajax Feature Tests", function() {
       });
     });
     
+  });
+  
+  context("Cross domain Test", function() {
+    //this.timeout(15000);
+    it('Cross domain GET test', function(done) {
+      yuanjs.ajax({
+        url: 'http://192.168.2.102/projects/yuanjs/test/crossdomain.php',
+        type: 'GET',
+        crossDomain: true,
+        success: function(data) {
+          catchError(function(){
+            expect(data).to.equal("PHP");
+          }, done);
+        },
+        error: function() {
+          throw new Error('Should be failed');
+        }
+      });
+    });
   });
   
   context('Load Script Tests', function() {
