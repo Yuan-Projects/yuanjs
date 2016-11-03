@@ -199,6 +199,19 @@
     return Object.prototype.toString.call(param) === "[object Array]";
   }
   
+  
+  /**
+   * Check to see if an object is empty (contains no enumerable properties).
+   *
+   */
+  function isEmptyObject(obj) {
+    var name;
+    for (name in obj) {
+      return false;
+    }
+    return true;
+  }
+  
   function isNumber(param) {
     return !isNaN(param);
   }
@@ -257,6 +270,7 @@
   }
 
   yuanjs.isArray = isArray;
+  yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
   yuanjs.isString = isString;
   yuanjs.isFunction = isFunction;
