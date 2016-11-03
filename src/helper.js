@@ -203,6 +203,14 @@
     return typeof param === "string";
   }
   
+  /**
+   * Determine if the argument passed is a JavaScript function object.
+   * Note: Functions provided by the browser like alert() and DOM element methods 
+   *       like getAttribute() are not guaranteed to be detected as functions in browsers such as Internet Explorer.
+   *
+   * @param {Object} param Object to test whether or not it is a function
+   * @returns {Boolean}
+   */
   function isFunction(param) {
     return Object.prototype.toString.call(param) === '[object Function]';
   }
