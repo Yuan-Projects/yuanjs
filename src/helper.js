@@ -138,11 +138,12 @@
     };
   }
   
-  // A String.trim() method for ECMAScript 3
-  if(!String.prototype.trim) {
-    String.prototype.trim = function () {
-      return this.replace(/^\s+|\s+$/g,'');
-    };
+  function trim(str) {
+    if (String.prototype.trim) {
+      return str.trim();
+    } else {
+      return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+    }
   }
   
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
@@ -283,4 +284,5 @@
   yuanjs.isUndefined = isUndefined;
   yuanjs.isEmpty = isEmpty;
   yuanjs.replaceAll = replaceAll;
+  yuanjs.trim = trim;
   yuanjs.urlArgs = urlArgs;
