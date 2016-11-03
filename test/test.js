@@ -1,3 +1,10 @@
+describe("Core tests", function() {
+  describe('The trim() function tests', function() {
+    it('"   foo  " was trimed to "foo"', function() {
+      expect(yuanjs.trim("   foo  ")).to.be('foo');
+    });
+  });
+});
 describe("The Ajax Feature Tests", function() {
   
   describe("HTTP Get Test", function() {
