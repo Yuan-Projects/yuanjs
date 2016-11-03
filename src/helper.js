@@ -145,14 +145,6 @@
     };
   }
   
-  // From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
-  // Running the following code before any other code will create Array.isArray() if it's not natively available.
-  if(!Array.isArray) {
-    Array.isArray = function (vArg) {
-      return Object.prototype.toString.call(vArg) === "[object Array]";
-    };
-  }
-  
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
   if (!Object.keys) {
     Object.keys = (function() {
@@ -193,6 +185,18 @@
         return result;
       };
     }());
+  }
+  
+  /**
+   * Determine whether the argument is an array.
+   * @param {Object} param Object to test whether or not it is an array
+   * @returns {Boolean}
+   */
+  function isArray(param) {
+    if (Array.isArray) {
+      return Array.isArray(param);
+    }
+    return Object.prototype.toString.call(param) === "[object Array]";
   }
   
   function isNumber(param) {
@@ -252,6 +256,7 @@
     return args;                               // Return the parsed arguments
   }
 
+  yuanjs.isArray = isArray;
   yuanjs.isNumber = isNumber;
   yuanjs.isString = isString;
   yuanjs.isFunction = isFunction;
