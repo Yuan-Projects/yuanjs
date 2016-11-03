@@ -87,4 +87,24 @@ describe("Type validation tests", function(){
       expect(yuanjs.isArray(regexp)).to.be(false);
     });
   });
+  
+  describe("The isEmptyObject() function tests", function() {
+    it("{} is an empty object", function() {
+      expect(yuanjs.isEmptyObject({})).to.be(true);
+    });
+  });
+  
+  describe("The isNumeric() function tests", function() {
+    it("The figure 1 is a number", function() {
+      expect(yuanjs.isNumeric(1)).to.be(true);
+    });
+    
+    it("The string '1' is a number", function() {
+      expect(yuanjs.isNumeric('1')).to.be(true);
+    });
+    
+    it("The empty string '' is not a number", function() {
+      expect(yuanjs.isNumeric('')).to.be(false);
+    });
+  });
 });
