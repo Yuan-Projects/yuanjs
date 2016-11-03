@@ -56,4 +56,35 @@ describe("Type validation tests", function(){
     });
     
   });
+  
+  describe("The isArray() function tests", function() {
+    it("[] is an array", function() {
+      expect(yuanjs.isArray([])).to.be(true);
+    });
+    it("new Array() is an array", function() {
+      expect(yuanjs.isArray(new Array())).to.be(true);
+    });
+    it("A string is not an array", function() {
+      expect(yuanjs.isArray("")).to.be(false);
+    });
+    it("A boolean value is not an array", function() {
+      expect(yuanjs.isArray(true)).to.be(false);
+    });
+    it("A number is not an array", function() {
+      expect(yuanjs.isArray(0)).to.be(false);
+    });
+    it('undefined should not be an array', function() {
+      var undef;
+      expect(yuanjs.isArray(undef)).to.be(false);
+    });
+    
+    it('null should not be type of array', function() {
+      expect(yuanjs.isArray(null)).to.be(false);
+    });
+    
+    it('A regular expression is not an array', function() {
+      var regexp = /[a-z]+/;
+      expect(yuanjs.isArray(regexp)).to.be(false);
+    });
+  });
 });
