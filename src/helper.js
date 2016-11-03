@@ -236,6 +236,10 @@
     return param === null;
   }
   
+  function isNumeric(obj) {
+    return !isNaN(parseFloat(obj)) && isFinite(obj);
+  }
+  
   function isUndefined(param) {
     return typeof param === "undefined";
   }
@@ -272,6 +276,7 @@
   yuanjs.isArray = isArray;
   yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
+  yuanjs.isNumeric = isNumeric;
   yuanjs.isString = isString;
   yuanjs.isFunction = isFunction;
   yuanjs.isNull = isNull;
