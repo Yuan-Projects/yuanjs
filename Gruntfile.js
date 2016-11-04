@@ -5,6 +5,7 @@
     'src/debugger.js',
     'src/attr.js',
     'src/deferred.js',
+    'src/functions.js',
     'src/helper.js',
     'src/ajax.js',
     'src/dom.js',
