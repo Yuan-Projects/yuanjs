@@ -14,7 +14,7 @@ describe("Functions tests", function() {
       expect(yuanjs.bind(obj.cb, obj2)()).to.be(10);
     });
     
-    it('#1 Test with arguments', function() {
+    it('#2 Test with arguments', function() {
       var obj1 = {
         my: 1,
         cb: function(x, y, z) {
@@ -26,5 +26,23 @@ describe("Functions tests", function() {
       };
       expect(yuanjs.bind(obj1.cb, obj2, 1, 2, 3)()).to.be(61);
     });
+    
+    it('#3 Partial application test', function() {
+      var obj1 = {
+        my: 1,
+        cb: function() {
+          var total = this.my;
+          for (var i = 0, len = arguments.length; i < len; i++) {
+            total += arguments[i];
+          }
+          return total;
+        }
+      };
+      var obj2 = {
+        my: 10
+      };
+      expect(yuanjs.bind(obj1.cb, obj2, 1, 2, 3)(2)).to.be(18);
+    });
+    
   });
 });
