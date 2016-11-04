@@ -193,12 +193,9 @@
    * @param {Object} param Object to test whether or not it is an array
    * @returns {Boolean}
    */
-  function isArray(param) {
-    if (Array.isArray) {
-      return Array.isArray(param);
-    }
+  yuanjs.isArray =  Array.isArray || function(param) {
     return Object.prototype.toString.call(param) === "[object Array]";
-  }
+  };
   
   
   /**
@@ -274,7 +271,6 @@
     return args;                               // Return the parsed arguments
   }
 
-  yuanjs.isArray = isArray;
   yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
   yuanjs.isNumeric = isNumeric;
