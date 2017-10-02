@@ -421,9 +421,17 @@
     return args;                               // Return the parsed arguments
   }
 
+  function isInteger(value) {
+    if (Number.isInteger) {
+      return Number.isInteger(value);
+    }
+    return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
+  }
+
   yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
   yuanjs.isNumeric = isNumeric;
+  yuanjs.isInteger = isInteger;
   yuanjs.isString = isString;
   yuanjs.isFunction = isFunction;
   yuanjs.isNull = isNull;
