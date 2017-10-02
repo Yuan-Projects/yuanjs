@@ -140,4 +140,13 @@ describe("Type validation tests", function(){
       expect(yuanjs.isInteger([1])).to.be(false);
     });
   });
+
+  describe("The inArray() function tests", function() {
+    it('Should returns -1 if a specified value is not in the array', function() {
+      expect(yuanjs.inArray(1, ["1", 2, "string"])).to.equal(-1);
+    });
+    it('Should returns the index of a specified value in the array', function() {
+      expect(yuanjs.inArray("1", ["1", 2, "string"])).to.equal(0);
+    });
+  });
 });
