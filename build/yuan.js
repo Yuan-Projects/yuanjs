@@ -137,6 +137,17 @@
   
   yuanjs.Deferred = Deferred;
   
+  yuanjs.bind = function(func, context) {
+    var slice = Array.prototype.slice; 
+    if (Function.prototype.bind) {
+      return Function.prototype.bind.apply(func, Array.prototype.slice.call(arguments, 1));
+    }
+    var args = slice.call(arguments, 2);
+    return function() {
+      var innerArgs = slice.call(arguments);
+      return func.apply(context, args.concat(innerArgs));
+    };
+  }; 
   /**
    * Helper functions
    *
@@ -277,19 +288,12 @@
     };
   }
   
-  // A String.trim() method for ECMAScript 3
-  if(!String.prototype.trim) {
-    String.prototype.trim = function () {
-      return this.replace(/^\s+|\s+$/g,'');
-    };
-  }
-  
-  // From: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray
-  // Running the following code before any other code will create Array.isArray() if it's not natively available.
-  if(!Array.isArray) {
-    Array.isArray = function (vArg) {
-      return Object.prototype.toString.call(vArg) === "[object Array]";
-    };
+  function trim(str) {
+    if (String.prototype.trim) {
+      return str.trim();
+    } else {
+      return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+    }
   }
   
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
@@ -334,6 +338,28 @@
     }());
   }
   
+  /**
+   * Determine whether the argument is an array.
+   * @param {Object} param Object to test whether or not it is an array
+   * @returns {Boolean}
+   */
+  yuanjs.isArray =  Array.isArray || function(param) {
+    return Object.prototype.toString.call(param) === "[object Array]";
+  };
+  
+  
+  /**
+   * Check to see if an object is empty (contains no enumerable properties).
+   *
+   */
+  function isEmptyObject(obj) {
+    var name;
+    for (name in obj) {
+      return false;
+    }
+    return true;
+  }
+  
   function isNumber(param) {
     return !isNaN(param);
   }
@@ -342,12 +368,24 @@
     return typeof param === "string";
   }
   
+  /**
+   * Determine if the argument passed is a JavaScript function object.
+   * Note: Functions provided by the browser like alert() and DOM element methods 
+   *       like getAttribute() are not guaranteed to be detected as functions in browsers such as Internet Explorer.
+   *
+   * @param {Object} param Object to test whether or not it is a function
+   * @returns {Boolean}
+   */
   function isFunction(param) {
     return Object.prototype.toString.call(param) === '[object Function]';
   }
   
   function isNull(param) {
     return param === null;
+  }
+  
+  function isNumeric(obj) {
+    return !isNaN(parseFloat(obj)) && isFinite(obj);
   }
   
   function isUndefined(param) {
@@ -383,117 +421,157 @@
     return args;                               // Return the parsed arguments
   }
 
+  yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
+  yuanjs.isNumeric = isNumeric;
   yuanjs.isString = isString;
   yuanjs.isFunction = isFunction;
   yuanjs.isNull = isNull;
   yuanjs.isUndefined = isUndefined;
   yuanjs.isEmpty = isEmpty;
   yuanjs.replaceAll = replaceAll;
+  yuanjs.trim = trim;
   yuanjs.urlArgs = urlArgs;
 
-    /**
-     * Ajax request
-     *
-     */
+  /**
+   * Ajax request
+   *
+   */
 
-    function ajax(options) {
-        var dtd = Deferred();
-        var xhr = new XMLHttpRequest();
-        var url = options.url;
-        var type = options.type ? options.type.toUpperCase() : "GET";
-        var isAsyc = !!options.asyc || true;
-        var successCallBack = options.success;
-        var errorCallBack = options.error;
-        var completeCallBack = options.complete;
-        var data = options.data ? encodeFormatData(options.data) : "";
-        var dataType = options.dataType || "text";
-        var contentType = options.contentType || "application/x-www-form-urlencoded";
-        var timeout = (options.timeout && !isNaN(options.timeout) && options.timeout > 0) ? options.timeout : 0;
-        var timedout = false;
-        var headers = Object.prototype.toString.call(options.headers) === "[object Object]" ? options.headers : null;
+  function ajax(options) {
+    var dtd = Deferred();
+    var xhr = getXHR(options.crossDomain);
+    var url = options.url;
+    var type = options.type ? options.type.toUpperCase() : "GET";
+    var isAsyc = !!options.asyc || true;
+    var successCallBack = options.success;
+    var errorCallBack = options.error;
+    var completeCallBack = options.complete;
+    var data = options.data ? encodeFormatData(options.data) : "";
+    var dataType = options.dataType || "text";
+    var contentType = options.contentType || "application/x-www-form-urlencoded";
+    var timeout = (options.timeout && !isNaN(options.timeout) && options.timeout > 0) ? options.timeout : 0;
+    var timedout = false;
+    var headers = Object.prototype.toString.call(options.headers) === "[object Object]" ? options.headers : null;
 
-        if(timeout) {
-            var timer = setTimeout(function() {
-                timedout = true;
-                xhr.abort();
-                xhr.message = "Canceled";
-                dtd.reject(xhr);
-            },timeout);
+    if(timeout) {
+      var timer = setTimeout(function() {
+        timedout = true;
+        xhr.abort();
+        xhr.message = "Canceled";
+        dtd.reject(xhr);
+      },timeout);
+    }
+
+    if(type === "GET" && data !== "") {
+      url += (url.indexOf("?") === -1 ? "?" : "&") + data;
+    }
+    xhr.open(type, url, isAsyc);
+    if(isAsyc) {
+      if ("onreadystatechange" in xhr) {
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            callBack();
+          }
+        };
+      } else {
+        xhr.onload = callBack;
+        xhr.onerror = function(){
+          if (errorCallBack) {
+            errorCallBack(xhr);
+          }
+          dtd.reject(xhr);
+        };
+      }
+    }
+
+    if (xhr.setRequestHeader) {
+      xhr.setRequestHeader("Content-Type", contentType);
+    }
+    if (headers && xhr.setRequestHeader) { // No custom headers may be added to the request in the XDomainRequest object
+      for (var prop in headers) {
+        if (headers.hasOwnProperty(prop)) {
+          xhr.setRequestHeader(prop, headers[prop]);
         }
+      }
+    }
 
-        if(type === "GET" && data !== "") {
-            url += (url.indexOf("?") === -1 ? "?" : "&") + data;
-        }
-        xhr.open(type, url, isAsyc);
-        if(isAsyc) {
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-              callBack();
+    switch(type) {
+      case "POST":
+        xhr.send(data);
+        break;
+      case "GET":
+        xhr.send(null);
+    }
+    if(!isAsyc) {
+      callBack();
+    }
+    
+    function getXHR(crossDomain) {
+      var xhr = new XMLHttpRequest();
+      if (crossDomain && typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+      }
+      return xhr;
+    }
+
+    function callBack() {
+      if(timedout){
+        return;
+      }
+      clearTimeout(timer);
+      var resultText = xhr.responseText;
+      var resultXML = xhr.responseXML;
+      var textStatus = xhr.statusText;
+      if (completeCallBack) {
+        completeCallBack(xhr, textStatus);
+      }
+      // Determine if successful
+      if ("status" in xhr) {
+        var status = xhr.status;
+        var isSuccess = status >= 200 && status < 300 || status === 304;
+        if(isSuccess) {
+          var resultType = xhr.getResponseHeader("Content-Type");
+          if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
+            if (successCallBack) {
+              successCallBack(resultXML, xhr);
             }
-          };
-        }
-
-        xhr.setRequestHeader("Content-Type", contentType);
-        if (headers) {
-          for (var prop in headers) {
-            if (headers.hasOwnProperty(prop)) {
-              xhr.setRequestHeader(prop, headers[prop]);
+          } else if(dataType === "json" || resultType === "application/json") {
+            if (successCallBack) {
+              successCallBack(JSON.parse(resultText), xhr);
+            }
+          }else{
+            if (successCallBack) {
+              successCallBack(resultText, xhr);
             }
           }
+          dtd.resolve(xhr);
+        } else {
+          if (errorCallBack) {
+            errorCallBack(status, xhr);
+          }
+          dtd.reject(xhr);
+        }        
+      } else { // XDomainRequest
+        if(dataType === "xml" || xhr.responseXML){
+          if (successCallBack) {
+            successCallBack(resultXML, xhr);
+          }
+        } else if(dataType === "json") {
+          if (successCallBack) {
+            successCallBack(JSON.parse(resultText), xhr);
+          }
+        }else{
+          if (successCallBack) {
+            successCallBack(resultText, xhr);
+          }
         }
-
-        switch(type) {
-            case "POST":
-                xhr.send(data);
-                break;
-            case "GET":
-                xhr.send(null);
-        }
-        if(!isAsyc) {
-            callBack();
-        }
-
-        function callBack() {
-            if(timedout){
-                return;
-            }
-            clearTimeout(timer);
-            var resultText = xhr.responseText;
-            var resultXML = xhr.responseXML;
-            var textStatus = xhr.statusText;
-            if (completeCallBack) {
-              completeCallBack(xhr, textStatus);
-            }
-            // Determine if successful
-            var status = xhr.status;
-            var isSuccess = status >= 200 && status < 300 || status === 304;
-            if(isSuccess) {
-                var resultType = xhr.getResponseHeader("Content-Type");
-                if(dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)){
-                  if (successCallBack) {
-                    successCallBack(resultXML, xhr);
-                  }
-                } else if(dataType === "json" || resultType === "application/json") {
-                  if (successCallBack) {
-                    successCallBack(JSON.parse(resultText), xhr);
-                  }
-                }else{
-                  if (successCallBack) {
-                    successCallBack(resultText, xhr);
-                  }
-                }
-                dtd.resolve(xhr);
-            } else {
-              if (errorCallBack) {
-                errorCallBack(status, xhr);
-              }
-                dtd.reject(xhr);
-            }
-        }
-        return dtd.promise();
+        dtd.resolve(xhr);
+      }
     }
-    yuanjs.ajax = ajax;
+    return dtd.promise();
+  }
+  yuanjs.ajax = ajax;
     
   // Inspired by jQuery
   function loadScript(src, successCallback, errorCallback) {
@@ -700,79 +778,6 @@
     yuanjs.trigger = trigger;
     
 
-  function fixEvent(event) {
-    // Predefines often-used functions
-    function returnTrue() { return true; }
-    function returnFalse() { return false; }
-
-    // Tests if fixing up is needed
-    if (!event || !event.stopPropagation) {
-      var old = event || window.event;
-
-      // Clone the old object so that we can modify the values
-      event = {};
-      for(var prop in old) {
-	event[prop] = old[prop];
-      }
-
-      // The event occurrecd on this element 
-      if (!event.target) {
-	event.target = event.srcElement || document;
-      } 
-
-      // Handle which other element the event is related to
-      event.relatedTarget = event.fromElement === event.target ? event.toElement : event.fromElement;
-
-      // Stop the default browser action
-      event.preventDefault = function() {
-	event.returnValue = false;
-	event.isDefaultPrevented = returnTrue;
-      };
-
-      event.isDefaultPrevented = returnFalse;
-
-      // Stop the event from bubbling
-      event.stopPropagation = function() {
-	event.cancelBubble = true;
-	event.isPropagationStopped = returnTrue;
-      };
-
-      event.isPropagationStopped = returnFalse;
-
-      // Stop the event from bubbling and executing other handlers
-      event.stopImmediatePropagation = function() {
-	this.isImmediatePropagationStopped = returnTrue;
-	this.stopPropagation();
-      };
-
-      event.isImmediatePropagationStopped = returnFalse;
-
-      // Handle mouse position
-      if (event.clientX !== null) {
-	var doc = document.documentElement, body = document.body;
-
-	event.pageX = event.clientX + 
-	  (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-	  (doc && doc.clientLeft || body && body.clientLeft || 0);
-	event.pageY = event.clientY + 
-	  (doc && doc.scrollTop || body && body.scrollTop || 0) - 
-	  (doc && doc.clientTop || body && body.clientTop || 0);
-      }
-      
-      // Handle  key presses
-      event.which = event.charCode || event.keyCode;
-      // Fix button for mouse clicks:
-      // 0 == left; 1 == middle; 2 == right
-      if ( event.button !== null) {
-	event.button = (event.button & 1 ? 0 :
-	    (event.button & 4 ? 1:
-	     (event.button & 2 ? 2: 0)));
-      }
-    }
-    return event;
-  }
-
-
   (function(){
     var cache = {},
         guidCounter = 1,
@@ -804,7 +809,72 @@
     yuanjs.removeData = removeData;
   })();
 
+  function fixEvent(event) {
+    // Predefines often-used functions
+    function returnTrue() { return true; }
+    function returnFalse() { return false; }
 
+    // Tests if fixing up is needed
+    if (!event || !event.stopPropagation) {
+      var old = event || window.event;
+
+      // Clone the old object so that we can modify the values
+      event = {};
+      for(var prop in old) {
+        event[prop] = old[prop];
+      }
+
+      // The event occurrecd on this element 
+      if (!event.target) {
+        event.target = event.srcElement || document;
+      } 
+
+      // Handle which other element the event is related to
+      event.relatedTarget = event.fromElement === event.target ? event.toElement : event.fromElement;
+
+      // Stop the default browser action
+      event.preventDefault = function() {
+        event.returnValue = false;
+        event.isDefaultPrevented = returnTrue;
+      };
+
+      event.isDefaultPrevented = returnFalse;
+
+      // Stop the event from bubbling
+      event.stopPropagation = function() {
+        event.cancelBubble = true;
+        event.isPropagationStopped = returnTrue;
+      };
+
+      event.isPropagationStopped = returnFalse;
+
+      // Stop the event from bubbling and executing other handlers
+      event.stopImmediatePropagation = function() {
+        this.isImmediatePropagationStopped = returnTrue;
+        this.stopPropagation();
+      };
+
+      event.isImmediatePropagationStopped = returnFalse;
+
+      // Handle mouse position
+      if (event.clientX !== null) {
+        var doc = document.documentElement, body = document.body;
+
+        event.pageX = event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+        event.pageY = event.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
+      }
+      
+      // Handle  key presses
+      event.which = event.charCode || event.keyCode;
+      // Fix button for mouse clicks:
+      // 0 == left; 1 == middle; 2 == right
+      if ( event.button !== null) {
+        event.button = (event.button & 1 ? 0 : (event.button & 4 ? 1: (event.button & 2 ? 2: 0)));
+      }
+    }
+    return event;
+  }
+  
   // DOM Events
 
   (function(){
@@ -1025,11 +1095,11 @@
       return parseFloat(element.style.opacity) || defaultValue; 
     } else {
       if (element.style.cssText) {
-	var regExp = /alpha\(.*opacity=(\d+).*\)/i;
-	var matchResult = element.style.cssText.match(regExp);
-	if (matchResult && matchResult[1]) {
-	  return parseFloat(matchResult[1] / 100);
-	}
+        var regExp = /alpha\(.*opacity=(\d+).*\)/i;
+        var matchResult = element.style.cssText.match(regExp);
+        if (matchResult && matchResult[1]) {
+          return parseFloat(matchResult[1] / 100);
+        }
       }
     }
     return defaultValue;
@@ -1064,10 +1134,9 @@
     var translations = {
       "float": ["cssFloat", "styleFloat"]
     };
-    name = name.replace(/-([a-z])/ig, 
-	function(all, letter){ 
-	  return letter.toUpperCase(); 
-	});
+    name = name.replace(/-([a-z])/ig, function(all, letter){
+      return letter.toUpperCase();
+    });
 
     if (translations[name]) {
       name = typeof element.style[translations[name][0]] !== "undefined" ?  translations[name][0] : translations[name][1];
@@ -1080,7 +1149,6 @@
     if (name === "opacity") {
       return getOpacity(element);
     }
-    //return element.style[name];
     return fetchComputedStyle(element, name);
   }
 
@@ -1088,8 +1156,8 @@
     if (window.getComputedStyle) {
       var computedStyle = window.getComputedStyle(element);
       if (computedStyle) {
-	property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
-	return computedStyle.getPropertyValue(property);
+        property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+        return computedStyle.getPropertyValue(property);
       }
     } else if (element.currentStyle) {
       property = property.replace(/-([a-z])/ig, function(all, letter) { return letter.toUpperCase(); });
@@ -1145,14 +1213,14 @@
       element.style.height = newHeight;
     } else {
       if (!isVisible(element)) {
-	return getDimensions(element).height;
+        return getDimensions(element).height;
       }
       if (window.getComputedStyle) {
-	var style = window.getComputedStyle(element);
-	return style.getPropertyValue("height");
+        var style = window.getComputedStyle(element);
+        return style.getPropertyValue("height");
       } else if (element.currentStyle) {
-	var currentHeight = element.currentStyle.height;
-	return currentHeight == "auto" ? element.offsetHeight : currentHeight;
+        var currentHeight = element.currentStyle.height;
+        return currentHeight == "auto" ? element.offsetHeight : currentHeight;
       }
     }
   }
@@ -1181,6 +1249,26 @@
     return {
       "top": Math.round(top),
       "left": Math.round(left)	
+    };
+  }
+  
+  /**
+   * Get the current coordinates of the element, relative to the document.
+   * Note: Works on IE7+ 
+   */
+  function getOffset(elem) {
+    var current = elem.offsetParent,
+        actualLeft = elem.offsetLeft,
+        actualTop = elem.offsetTop;
+        
+    while ((current = current.offsetParent)) {
+      actualLeft += current.offsetLeft;
+      actualTop += current.offsetTop;
+    }
+    
+    return {
+      left: actualLeft,
+      top: actualTop
     };
   }
   
@@ -1246,29 +1334,28 @@
   }
   
   function has3dTransforms(){
-      var el = document.createElement('p'),
-      has3d,
-      transforms = {
+    var el = document.createElement('p'),
+        has3d,
+        transforms = {
           'webkitTransform':'-webkit-transform',
           'OTransform':'-o-transform',
           'msTransform':'-ms-transform',
           'MozTransform':'-moz-transform',
           'transform':'transform'
-      };
-   
-      // Add it to the body to get the computed style
-      document.body.insertBefore(el, null);
-   
-      for(var t in transforms){
-          if( el.style[t] !== undefined ){
-              el.style[t] = 'translate3d(1px,1px,1px)';
-              has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
-          }
+        };
+ 
+    // Add it to the body to get the computed style
+    document.body.insertBefore(el, null);
+ 
+    for(var t in transforms){
+      if( el.style[t] !== undefined ){
+        el.style[t] = 'translate3d(1px,1px,1px)';
+        has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
       }
-   
-      document.body.removeChild(el);
-   
-      return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+    }
+ 
+    document.body.removeChild(el);
+    return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
   
   yuanjs.hasClass = hasClass;
@@ -1281,6 +1368,7 @@
   yuanjs.getTranslateYValue = getTranslateYValue;
   yuanjs.getTransitionEndEventName = getTransitionEndEventName;
   yuanjs.has3dTransforms = has3dTransforms;
+  yuanjs.getOffset = getOffset;
 
 /**
  * Merge multiple objects dynamically with modifying either arguments.
@@ -1346,6 +1434,76 @@ function namespace(str, value) {
 yuanjs.extend = extend;
 yuanjs.namespace = namespace;
 
+  /**
+   * Create synthetic DOM events.
+   * @param {String} eventName The name of the event
+   * @param {Object} [params] Event parameters, can have the following fields:
+   *        1) "bubbles":  A Boolean indicating whether the event bubbles. The default is false.
+   *        2) "cancelable": A Boolean indicating whether the event can be canceled. The default is false.
+   *        3) "scoped": A Boolean indicating whether the given event bubbles.If this value is true, deepPath will only contain a target node.
+   *        4) "composed": A Boolean indicating whether the event will trigger listeners outside of a shadow root. The default is false.
+   *        5) "detail": optional and defaulting to null, of type any, that is an event-dependent value associated with the event.
+   * NOTE: IE 8 and earlier require the `eventName` to be an event name that supported natively. Such as click, blur, focus...
+   */
+  function SyntheticEvent(eventName, params) {
+    if (typeof eventName !== "string") {
+      throw new Error("The eventName parameter should be a string");
+    }
+    params = {
+      "bubbles": Boolean(params && params.bubbles),
+      "cancelable": Boolean(params && params.cancelable),
+      "composed": Boolean(params && params.composed),
+      "scoped": Boolean(params && params.scoped),
+      "detail": params ? params.detail : null
+    };
+    var event;    
+    // Use the CustomEvent interface : https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+    try {
+      event = new CustomEvent(eventName, params);
+    } catch(e) { // The old-fashioned way
+      try {
+        // DOM Level 3 Events Custom event module
+        event = document.createEvent('CustomEvent');
+        event.initCustomEvent(eventName, params.bubbles, params.cancelable, params.detail);
+      } catch(ex) {
+        // DOM Level 3 Events Basic events module
+        event = document.createEvent('Event');
+        event.initEvent(eventName, params.bubbles, params.cancelable);
+        event.detail = params.detail; // Attach the detail data to the event object
+      } finally {
+        if (!event) {
+          // Internet Explorer 8 and earlier
+          event = document.createEventObject();// create event object
+          event.type = eventName;// Event type
+          var detail = params.detail;
+          if (detail) { // Suppose it's an object
+            for (var prop in detail) { // initialize the event object
+              if (detail.hasOwnProperty(prop)) {
+                event[prop] = detail[prop];
+              }
+            }
+          }
+        }
+      }
+    } finally {
+      if (event) {
+        return event;
+      } else {
+        throw new Error('Your browser doest not support custom events.');
+      }
+    }
+  }
+  
+  function dispatchSyntheticEvent(elem, event) {
+    if (elem.dispatchEvent) {
+      elem.dispatchEvent(event);
+    } else if (elem.fireEvent) {
+      elem.fireEvent("on" + event.type, event);
+    }
+  }
+
+  yuanjs.CustomEvent = SyntheticEvent;
+  yuanjs.dispatchCustomEvent = dispatchSyntheticEvent;
 
   if ( typeof module != 'undefined' && module.exports ) {
     module.exports = yuanjs;
