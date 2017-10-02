@@ -346,6 +346,12 @@
   yuanjs.isArray =  Array.isArray || function(param) {
     return Object.prototype.toString.call(param) === "[object Array]";
   };
+
+  function inArray(value, array, fromIndex) {
+    return Array.prototype.indexOf.call(array, value, fromIndex);
+  }
+
+  yuanjs.inArray = inArray;
   
   
   /**
