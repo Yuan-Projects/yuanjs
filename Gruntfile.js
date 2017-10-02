@@ -27,6 +27,7 @@
     },
     jshint: {
       options: {
+        reporterOutput: '',
         newcap:false
       },
       all: ['build/yuan.js']
