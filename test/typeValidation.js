@@ -107,4 +107,37 @@ describe("Type validation tests", function(){
       expect(yuanjs.isNumeric('')).to.be(false);
     });
   });
+
+  describe("The isInteger() function tests", function() {
+    it('The figure 1 is an integer', function() {
+      expect(yuanjs.isInteger(1)).to.be(true);
+    });
+    it('The figure -1 is an integer', function() {
+      expect(yuanjs.isInteger(-1)).to.be(true);
+    });
+    it('The figure 0.5 is not an integer', function() {
+      expect(yuanjs.isInteger(0.5)).to.be(false);
+    });
+    it('The number PI is not an integer', function() {
+      expect(yuanjs.isInteger(Math.PI)).to.be(false);
+    });
+    it('NaN is not an integer', function() {
+      expect(yuanjs.isInteger(NaN)).to.be(false);
+    });
+    it('Infinity is not an integer', function() {
+      expect(yuanjs.isInteger(Infinity)).to.be(false);
+    });
+    it('-Infinity is not an integer', function() {
+      expect(yuanjs.isInteger(-Infinity)).to.be(false);
+    });
+    it('The string "10" is not an integer', function() {
+      expect(yuanjs.isInteger("10")).to.be(false);
+    });
+    it('The boolean true is not an integer', function() {
+      expect(yuanjs.isInteger(true)).to.be(false);
+    });
+    it('The array [1] is not an integer', function() {
+      expect(yuanjs.isInteger([1])).to.be(false);
+    });
+  });
 });

@@ -14,7 +14,12 @@
   <script src="./testsuite/expect.js"></script>
   <script src="./testsuite/mocha.js"></script>
   <script src="../build/yuan.js"></script>
-  <script>mocha.setup('bdd')</script>
+  <script>
+    mocha.setup({
+      ui: 'bdd',
+      globals: ['__BROWSERTOOLS_DOMEXPLORER_ADDED']
+    })
+  </script>
   <script src="test.js"></script>
   <script src="typeValidation.js"></script>
   <script src="functionsTests.js"></script>
