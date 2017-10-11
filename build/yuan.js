@@ -287,7 +287,7 @@
       // 8. return undefined
     };
   }
-  
+
   function trim(str) {
     if (String.prototype.trim) {
       return str.trim();
@@ -295,7 +295,7 @@
       return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
     }
   }
-  
+
   // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
   if (!Object.keys) {
     Object.keys = (function() {
@@ -312,20 +312,20 @@
             'constructor'
           ],
           dontEnumsLength = dontEnums.length;
-  
+
       return function(obj) {
         if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
           throw new TypeError('Object.keys called on non-object');
         }
-  
+
         var result = [], prop, i;
-  
+
         for (prop in obj) {
           if (hasOwnProperty.call(obj, prop)) {
             result.push(prop);
           }
         }
-  
+
         if (hasDontEnumBug) {
           for (i = 0; i < dontEnumsLength; i++) {
             if (hasOwnProperty.call(obj, dontEnums[i])) {
@@ -337,7 +337,7 @@
       };
     }());
   }
-  
+
   /**
    * Determine whether the argument is an array.
    * @param {Object} param Object to test whether or not it is an array
@@ -352,8 +352,8 @@
   }
 
   yuanjs.inArray = inArray;
-  
-  
+
+
   /**
    * Check to see if an object is empty (contains no enumerable properties).
    *
@@ -365,18 +365,18 @@
     }
     return true;
   }
-  
+
   function isNumber(param) {
     return !isNaN(param);
   }
-  
+
   function isString(param) {
     return typeof param === "string";
   }
-  
+
   /**
    * Determine if the argument passed is a JavaScript function object.
-   * Note: Functions provided by the browser like alert() and DOM element methods 
+   * Note: Functions provided by the browser like alert() and DOM element methods
    *       like getAttribute() are not guaranteed to be detected as functions in browsers such as Internet Explorer.
    *
    * @param {Object} param Object to test whether or not it is a function
@@ -385,23 +385,23 @@
   function isFunction(param) {
     return Object.prototype.toString.call(param) === '[object Function]';
   }
-  
+
   function isNull(param) {
     return param === null;
   }
-  
+
   function isNumeric(obj) {
     return !isNaN(parseFloat(obj)) && isFinite(obj);
   }
-  
+
   function isUndefined(param) {
     return typeof param === "undefined";
   }
-  
+
   function isEmpty(param) {
     return /^\s*$/.test(param);
   }
-  
+
   // http://stackoverflow.com/a/15604206
   function replaceAll(str,mapObj) {
     var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
@@ -410,7 +410,7 @@
         return mapObj[matched.toLowerCase()];
     });
   }
-  
+
   function urlArgs() {
     var args = {};                             // Start with an empty object
     var query = location.search.substring(1);  // Get query string, minus '?'
@@ -434,6 +434,43 @@
     return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
   }
 
+
+  // A function for defining simple classes.
+  function _createClass(Constructor, protoProps, staticProps) {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) {
+          descriptor.writable = true;
+        }
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    function objectToArray(obj) {
+      var arr = [];
+      for (var prop in obj) {
+        if (!obj.hasOwnProperty(prop)) continue;
+        arr.push({
+          key: prop,
+          value: obj[prop]
+        });
+      }
+      return arr;
+    }
+    if (protoProps) {
+      protoProps = objectToArray(protoProps);
+      defineProperties(Constructor.prototype, protoProps);
+    }
+    if (staticProps) {
+      staticProps = objectToArray(staticProps);
+      defineProperties(Constructor, staticProps);
+    }
+    return Constructor;
+  }
+
+  yuanjs.createClass = _createClass;
   yuanjs.isEmptyObject = isEmptyObject;
   yuanjs.isNumber = isNumber;
   yuanjs.isNumeric = isNumeric;
@@ -752,45 +789,45 @@
   yuanjs.contains = contains;
   yuanjs.text = text;
 
-    // Events on and off
-    var Events = [];
+  // Events on and off
+  var Events = {};
 
-    function on(event, callback) {
-        if (!Events[event]) {
-            Events[event] = [];
-        }
-        Events[event].push(callback);
-        return callback;
+  function on(event, callback) {
+    if (!Events[event]) {
+      Events[event] = [];
     }
+    Events[event].push(callback);
+    return callback;
+  }
 
-    function off(event, callback) {
-        if (!Events[event]) {
-            return ;
-        }
-        if (callback) {
-            var index = Events[event].indexOf(callback);
-            if (index !== -1) {
-                Events[event].splice(index, 1);
-            }
-        } else {
-            Events[event] = [];
-        }
+  function off(event, callback) {
+    if (!Events[event]) {
+      return ;
     }
+    if (callback) {
+      var index = Events[event].indexOf(callback);
+      if (index !== -1) {
+        Events[event].splice(index, 1);
+      }
+    } else {
+      Events[event] = [];
+    }
+  }
 
-    function trigger (event) {
-        if (!Events[event]) {
-            return ;
-        }
-        var args = Array.prototype.slice.call(arguments, 1);
-        var callbackArray = Events[event];
-        for (var i = callbackArray.length - 1; i >= 0; i--) {
-            callbackArray[i].apply(callbackArray[i], args);
-        }
+  function trigger (event) {
+    if (!Events[event]) {
+      return ;
     }
-    yuanjs.on = on;
-    yuanjs.off = off;
-    yuanjs.trigger = trigger;
-    
+    var args = Array.prototype.slice.call(arguments, 1);
+    var callbackArray = Events[event];
+    for (var i = 0, len = callbackArray.length; i < len; i++) {
+      callbackArray[i].apply(callbackArray[i], args);
+    }
+  }
+  yuanjs.on = on;
+  yuanjs.off = off;
+  yuanjs.trigger = trigger;
+
 
   (function(){
     var cache = {},
