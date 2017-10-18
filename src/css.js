@@ -11,7 +11,7 @@
   function getOpacity(element) {
     var defaultValue = 1.0;
     if (isOpacitySupported()) {
-      return parseFloat(element.style.opacity) || defaultValue; 
+      return parseFloat(element.style.opacity) || defaultValue;
     } else {
       if (element.style.cssText) {
         var regExp = /alpha\(.*opacity=(\d+).*\)/i;
@@ -25,7 +25,7 @@
   }
 
   /**
-   * Get the top and height value for hidden elements. 
+   * Get the top and height value for hidden elements.
    */
   function getDimensions(element) {
     var properties = {
@@ -59,7 +59,7 @@
 
     if (translations[name]) {
       name = typeof element.style[translations[name][0]] !== "undefined" ?  translations[name][0] : translations[name][1];
-    } 
+    }
 
     if (typeof value !== "undefined") {
       element.style[name] = value;
@@ -89,10 +89,14 @@
     if (!originalClassName) {
       return false;
     }
-    var classRegExp = new RegExp("\\b" + className + "\\b");
-    return classRegExp.test(originalClassName);
+    if (element.classList) {
+      return element.classList.contains(className);
+    } else {
+      var classRegExp = new RegExp("\\b" + className + "\\b");
+      return classRegExp.test(originalClassName);
+    }
   }
-  
+
   function getWindowSize() {
     var pageWidth = window.innerWidth,
         pageHeight = window.innerHeight;
@@ -155,7 +159,7 @@
     var box = element.getBoundingClientRect();
     var body = document.body;
     var docEl = document.documentElement;
-    
+
     var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
     var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
@@ -167,30 +171,30 @@
 
     return {
       "top": Math.round(top),
-      "left": Math.round(left)	
+      "left": Math.round(left)
     };
   }
-  
+
   /**
    * Get the current coordinates of the element, relative to the document.
-   * Note: Works on IE7+ 
+   * Note: Works on IE7+
    */
   function getOffset(elem) {
     var current = elem.offsetParent,
         actualLeft = elem.offsetLeft,
         actualTop = elem.offsetTop;
-        
+
     while ((current = current.offsetParent)) {
       actualLeft += current.offsetLeft;
       actualTop += current.offsetTop;
     }
-    
+
     return {
       left: actualLeft,
       top: actualTop
     };
   }
-  
+
   function getTranslateXValue(domElement) {
     var val = getTranslateValue(domElement);
     return val.m41;
@@ -202,7 +206,7 @@
   }
 
   /**
-   * Return the CSS3 translate value of a DOM element. 
+   * Return the CSS3 translate value of a DOM element.
    * Note: IE 9+
    * @param {Object} domElement : A native DOM element
    * @returns {mixed}
@@ -232,7 +236,7 @@
 
     return new cssMatrixObject(matrixString);
   }
-  
+
   function getTransitionEndEventName() {
     var i,
       el = document.createElement('div'),
@@ -242,7 +246,7 @@
         'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
         'MozTransition':'transitionend'
       };
-    
+
     for (i in transitions) {
       if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
         return transitions[i];
@@ -251,7 +255,7 @@
     //TODO: throw 'TransitionEnd event is not supported in this browser';
     return '';
   }
-  
+
   function has3dTransforms(){
     var el = document.createElement('p'),
         has3d,
@@ -262,21 +266,21 @@
           'MozTransform':'-moz-transform',
           'transform':'transform'
         };
- 
+
     // Add it to the body to get the computed style
     document.body.insertBefore(el, null);
- 
+
     for(var t in transforms){
       if( el.style[t] !== undefined ){
         el.style[t] = 'translate3d(1px,1px,1px)';
         has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
       }
     }
- 
+
     document.body.removeChild(el);
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
-  
+
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
