@@ -18,13 +18,14 @@
     mocha.setup({
       ui: 'bdd',
       globals: ['__BROWSERTOOLS_DOMEXPLORER_ADDED']
-    })
+    });
   </script>
   <script src="test.js"></script>
   <script src="typeValidation.js"></script>
   <script src="functionsTests.js"></script>
   <script src="classTests.js"></script>
   <script src="tests/observerTests.js"></script>
+  <script src="tests/cssTests.js"></script>
   <script>
     mocha.checkLeaks();
     mocha.run();
