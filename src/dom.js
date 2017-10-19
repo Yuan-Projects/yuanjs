@@ -2,7 +2,46 @@
    * DOM Manipulation
    *
    */
-   
+
+  // https://stackoverflow.com/questions/814564/inserting-html-elements-with-javascript/814649#814649
+  function createDOMFromString(string) {
+    var frag = document.createDocumentFragment(),
+        div = document.createElement('div');
+    div.innerHTML = string;
+    while (div.firstChild) {
+      frag.appendChild(div.firstChild);
+    }
+    return frag;
+  }
+
+  function isDOMNode(node) {
+    return node && node.nodeType;
+  }
+
+  function after(element, content) {
+    // insertAdjacentHTML method is useful but has many problems, so we don't use it here.
+    // See https://github.com/jquery/jquery/pull/1200
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.parentNode.insertBefore(newElement, element.nextSibling);
+  }
+
+  function append(element, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.appendChild(newElement);
+  }
+
   function id() {
     var argLength = arguments.length;
     if (argLength === 0) throw Error('No id name provided.');
@@ -69,7 +108,7 @@
     }
     return nodes;
   }
-  
+
   function matchesSelector(element, selector){
     if (element.matches) {
       return element.matches(selector);
@@ -85,7 +124,7 @@
       throw new Error("Not supported.");
     }
   }
-  
+
   function contains(parentNode, childNode) {
     if (parentNode.compareDocumentPosition) {
       return !!(parentNode.compareDocumentPosition(childNode) & 16);
@@ -102,7 +141,7 @@
       return false;
     }
   }
-  
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -114,7 +153,9 @@
       }
     }
   }
-  
+
+  yuanjs.after = after;
+  yuanjs.append = append;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
