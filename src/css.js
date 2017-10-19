@@ -1,3 +1,13 @@
+  function addClass(element, className) {
+    if (hasClass(element, className)) return false;
+    var cssClass = element.className;
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  }
+
   function isVisible(element) {
     return !(element.offsetHeight === 0 && element.offsetWidth === 0);
   }
@@ -281,6 +291,7 @@
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
 
+  yuanjs.addClass = addClass;
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
