@@ -42,6 +42,17 @@
     element.appendChild(newElement);
   }
 
+  function before(element, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.parentNode.insertBefore(newElement, element);
+  }
+
   function id() {
     var argLength = arguments.length;
     if (argLength === 0) throw Error('No id name provided.');
@@ -156,6 +167,7 @@
 
   yuanjs.after = after;
   yuanjs.append = append;
+  yuanjs.before = before;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
