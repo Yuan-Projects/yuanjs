@@ -63,6 +63,13 @@
     return element.cloneNode(true);
   }
 
+  function html(element, domString) {
+    if (domString) {
+      element.innerHTML = domString;
+    }
+    return element.innerHTML;
+  }
+
   function id() {
     var argLength = arguments.length;
     if (argLength === 0) throw Error('No id name provided.');
@@ -203,6 +210,7 @@
   yuanjs.empty = empty;
   yuanjs.filter = filterNode;
   yuanjs.find = findNode;
+  yuanjs.html = html;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
