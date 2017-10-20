@@ -130,6 +130,10 @@
     return nodes;
   }
 
+  function empty(element) {
+    element.innerHTML = '';
+  }
+
   function matchesSelector(element, selector){
     if (element.matches) {
       return element.matches(selector);
@@ -180,6 +184,7 @@
   yuanjs.before = before;
   yuanjs.children = children;
   yuanjs.clone = clone;
+  yuanjs.empty = empty;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
