@@ -134,6 +134,18 @@
     element.innerHTML = '';
   }
 
+  function filterNode(domList, filterCondition) {
+    var filterFn = function() { return false; };
+    if (typeof filterCondition === "string") {
+      filterFn = function(element) {
+        return matchesSelector(element, filterCondition);
+      };
+    } else if (typeof filterCondition === "function") {
+      filterFn = filterCondition;
+    }
+    return Array.prototype.filter.call(domList, filterFn);
+  }
+
   function matchesSelector(element, selector){
     if (element.matches) {
       return element.matches(selector);
@@ -185,6 +197,7 @@
   yuanjs.children = children;
   yuanjs.clone = clone;
   yuanjs.empty = empty;
+  yuanjs.filter = filterNode;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
