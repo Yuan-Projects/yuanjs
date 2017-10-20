@@ -54,7 +54,13 @@
   }
 
   function children(element) {
+    // Note: Internet Explorer 6, 7 and 8 supported it, but erroneously includes Comment nodes.
     return element.children;
+  }
+
+
+  function clone(element) {
+    return element.cloneNode(true);
   }
 
   function id() {
@@ -173,6 +179,7 @@
   yuanjs.append = append;
   yuanjs.before = before;
   yuanjs.children = children;
+  yuanjs.clone = clone;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
