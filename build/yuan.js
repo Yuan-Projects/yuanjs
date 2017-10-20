@@ -669,7 +669,74 @@
    * DOM Manipulation
    *
    */
-   
+
+  // https://stackoverflow.com/questions/814564/inserting-html-elements-with-javascript/814649#814649
+  function createDOMFromString(string) {
+    var frag = document.createDocumentFragment(),
+        div = document.createElement('div');
+    div.innerHTML = string;
+    while (div.firstChild) {
+      frag.appendChild(div.firstChild);
+    }
+    return frag;
+  }
+
+  function isDOMNode(node) {
+    return node && node.nodeType;
+  }
+
+  function after(element, content) {
+    // insertAdjacentHTML method is useful but has many problems, so we don't use it here.
+    // See https://github.com/jquery/jquery/pull/1200
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.parentNode.insertBefore(newElement, element.nextSibling);
+  }
+
+  function append(element, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.appendChild(newElement);
+  }
+
+  function before(element, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    element.parentNode.insertBefore(newElement, element);
+  }
+
+  function children(element) {
+    // Note: Internet Explorer 6, 7 and 8 supported it, but erroneously includes Comment nodes.
+    return element.children;
+  }
+
+
+  function clone(element) {
+    return element.cloneNode(true);
+  }
+
+  function html(element, domString) {
+    if (domString) {
+      element.innerHTML = domString;
+    }
+    return element.innerHTML;
+  }
+
   function id() {
     var argLength = arguments.length;
     if (argLength === 0) throw Error('No id name provided.');
@@ -736,7 +803,27 @@
     }
     return nodes;
   }
-  
+
+  function empty(element) {
+    element.innerHTML = '';
+  }
+
+  function filterNode(domList, filterCondition) {
+    var filterFn = function() { return false; };
+    if (typeof filterCondition === "string") {
+      filterFn = function(element) {
+        return matchesSelector(element, filterCondition);
+      };
+    } else if (typeof filterCondition === "function") {
+      filterFn = filterCondition;
+    }
+    return Array.prototype.filter.call(domList, filterFn);
+  }
+
+  function findNode(parentNode, selector) {
+    return parentNode.querySelectorAll(selector);
+  }
+
   function matchesSelector(element, selector){
     if (element.matches) {
       return element.matches(selector);
@@ -752,7 +839,7 @@
       throw new Error("Not supported.");
     }
   }
-  
+
   function contains(parentNode, childNode) {
     if (parentNode.compareDocumentPosition) {
       return !!(parentNode.compareDocumentPosition(childNode) & 16);
@@ -769,7 +856,7 @@
       return false;
     }
   }
-  
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -781,7 +868,16 @@
       }
     }
   }
-  
+
+  yuanjs.after = after;
+  yuanjs.append = append;
+  yuanjs.before = before;
+  yuanjs.children = children;
+  yuanjs.clone = clone;
+  yuanjs.empty = empty;
+  yuanjs.filter = filterNode;
+  yuanjs.find = findNode;
+  yuanjs.html = html;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
@@ -1130,6 +1226,16 @@
     yuanjs.triggerEvent = triggerEvent;
   })();
 
+  function addClass(element, className) {
+    if (hasClass(element, className)) return false;
+    var cssClass = element.className;
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      element.className += ' ' + className;
+    }
+  }
+
   function isVisible(element) {
     return !(element.offsetHeight === 0 && element.offsetWidth === 0);
   }
@@ -1143,7 +1249,7 @@
   function getOpacity(element) {
     var defaultValue = 1.0;
     if (isOpacitySupported()) {
-      return parseFloat(element.style.opacity) || defaultValue; 
+      return parseFloat(element.style.opacity) || defaultValue;
     } else {
       if (element.style.cssText) {
         var regExp = /alpha\(.*opacity=(\d+).*\)/i;
@@ -1157,7 +1263,7 @@
   }
 
   /**
-   * Get the top and height value for hidden elements. 
+   * Get the top and height value for hidden elements.
    */
   function getDimensions(element) {
     var properties = {
@@ -1191,7 +1297,7 @@
 
     if (translations[name]) {
       name = typeof element.style[translations[name][0]] !== "undefined" ?  translations[name][0] : translations[name][1];
-    } 
+    }
 
     if (typeof value !== "undefined") {
       element.style[name] = value;
@@ -1221,10 +1327,14 @@
     if (!originalClassName) {
       return false;
     }
-    var classRegExp = new RegExp("\\b" + className + "\\b");
-    return classRegExp.test(originalClassName);
+    if (element.classList) {
+      return element.classList.contains(className);
+    } else {
+      var classRegExp = new RegExp("\\b" + className + "\\b");
+      return classRegExp.test(originalClassName);
+    }
   }
-  
+
   function getWindowSize() {
     var pageWidth = window.innerWidth,
         pageHeight = window.innerHeight;
@@ -1287,7 +1397,7 @@
     var box = element.getBoundingClientRect();
     var body = document.body;
     var docEl = document.documentElement;
-    
+
     var scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop;
     var scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft;
 
@@ -1299,30 +1409,30 @@
 
     return {
       "top": Math.round(top),
-      "left": Math.round(left)	
+      "left": Math.round(left)
     };
   }
-  
+
   /**
    * Get the current coordinates of the element, relative to the document.
-   * Note: Works on IE7+ 
+   * Note: Works on IE7+
    */
   function getOffset(elem) {
     var current = elem.offsetParent,
         actualLeft = elem.offsetLeft,
         actualTop = elem.offsetTop;
-        
+
     while ((current = current.offsetParent)) {
       actualLeft += current.offsetLeft;
       actualTop += current.offsetTop;
     }
-    
+
     return {
       left: actualLeft,
       top: actualTop
     };
   }
-  
+
   function getTranslateXValue(domElement) {
     var val = getTranslateValue(domElement);
     return val.m41;
@@ -1334,7 +1444,7 @@
   }
 
   /**
-   * Return the CSS3 translate value of a DOM element. 
+   * Return the CSS3 translate value of a DOM element.
    * Note: IE 9+
    * @param {Object} domElement : A native DOM element
    * @returns {mixed}
@@ -1364,7 +1474,7 @@
 
     return new cssMatrixObject(matrixString);
   }
-  
+
   function getTransitionEndEventName() {
     var i,
       el = document.createElement('div'),
@@ -1374,7 +1484,7 @@
         'OTransition':'otransitionend',  // oTransitionEnd in very old Opera
         'MozTransition':'transitionend'
       };
-    
+
     for (i in transitions) {
       if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
         return transitions[i];
@@ -1383,7 +1493,7 @@
     //TODO: throw 'TransitionEnd event is not supported in this browser';
     return '';
   }
-  
+
   function has3dTransforms(){
     var el = document.createElement('p'),
         has3d,
@@ -1394,21 +1504,22 @@
           'MozTransform':'-moz-transform',
           'transform':'transform'
         };
- 
+
     // Add it to the body to get the computed style
     document.body.insertBefore(el, null);
- 
+
     for(var t in transforms){
       if( el.style[t] !== undefined ){
         el.style[t] = 'translate3d(1px,1px,1px)';
         has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
       }
     }
- 
+
     document.body.removeChild(el);
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
-  
+
+  yuanjs.addClass = addClass;
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
