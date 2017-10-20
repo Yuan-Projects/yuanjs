@@ -53,6 +53,10 @@
     element.parentNode.insertBefore(newElement, element);
   }
 
+  function children(element) {
+    return element.children;
+  }
+
   function id() {
     var argLength = arguments.length;
     if (argLength === 0) throw Error('No id name provided.');
@@ -168,6 +172,7 @@
   yuanjs.after = after;
   yuanjs.append = append;
   yuanjs.before = before;
+  yuanjs.children = children;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
