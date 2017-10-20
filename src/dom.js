@@ -146,6 +146,10 @@
     return Array.prototype.filter.call(domList, filterFn);
   }
 
+  function findNode(parentNode, selector) {
+    return parentNode.querySelectorAll(selector);
+  }
+
   function matchesSelector(element, selector){
     if (element.matches) {
       return element.matches(selector);
@@ -198,6 +202,7 @@
   yuanjs.clone = clone;
   yuanjs.empty = empty;
   yuanjs.filter = filterNode;
+  yuanjs.find = findNode;
   yuanjs.id = id;
   yuanjs.tag = tag;
   yuanjs.cssClass = cssClass;
