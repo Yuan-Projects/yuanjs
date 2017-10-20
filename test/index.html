@@ -4,10 +4,30 @@
   <meta charset="utf-8">
   <title>Mocha Tests</title>
   <link href="./testsuite/mocha.css" rel="stylesheet" />
+  <style type="text/css">
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div id="mocha"></div>
   <div class="cls1 cls2" id="testDiv" style="display: none;">The default text</div>
+  <div id="afterTestDiv" class="hidden hidden1">Hello</div>
+  <div id="childrenTestDiv" class="hidden hidden1">
+    <p>p1</p>
+    <h1>h1</h1>
+    <!-- comment -->
+    some text goes here
+  </div>
+  <div id="toBeEmptiedTestDiv" class="hidden hidden1">
+    <p>p1</p>
+    <h1>h1</h1>
+    <!-- comment -->
+    some text goes here
+  </div>
+  <div id="htmlFuncDiv" class="hidden">HTML <span>text</span></div>
+
   <!--[if lt IE 8]>
     <script src="./testsuite/json2.min.js"></script>
   <![endif]-->

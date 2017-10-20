@@ -1,5 +1,21 @@
 describe("CSS tests", function(){
 
+  context('addClass() function Tests', function() {
+    it("#1", function() {
+      var dom = document.createElement('p');
+      dom.className = "class1";
+      yuanjs.addClass(dom, 'class2');
+      expect(dom.className).to.equal("class1 class2");
+    });
+
+    it("#2", function() {
+      var dom = document.createElement('p');
+      dom.className = "class1 class2";
+      yuanjs.addClass(dom, 'class2');
+      expect(dom.className).to.equal("class1 class2");
+    });
+  });
+
   it("hasClass() function", function() {
     var dom = document.createElement('p');
     dom.className = "class1";
