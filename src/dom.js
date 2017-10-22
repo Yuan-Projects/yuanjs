@@ -220,6 +220,19 @@
     }
   }
 
+  function siblings(element) {
+    var arr = [];
+    var parent = element.parentNode;
+    var node = parent.firstChild;
+    while(node) {
+      if (node.nodeType === 1 && node !== element) {
+        arr.push(node);
+      }
+      node = node.nextSibling;
+    }
+    return arr;
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -250,4 +263,5 @@
   yuanjs.parent = parent;
   yuanjs.prepend = prepend;
   yuanjs.remove = remove;
+  yuanjs.siblings = siblings;
   yuanjs.text = text;
