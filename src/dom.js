@@ -190,6 +190,14 @@
     }
   }
 
+  function offsetParent(element) {
+    var parent = element.offsetParent;
+    while (parent && css(parent, "position") === "static") {
+      parent = parent.offsetParent;
+    }
+    return parent || document.body;
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -216,4 +224,5 @@
   yuanjs.cssClass = cssClass;
   yuanjs.matchesSelector = matchesSelector;
   yuanjs.contains = contains;
+  yuanjs.offsetParent = offsetParent;
   yuanjs.text = text;
