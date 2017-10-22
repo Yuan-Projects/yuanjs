@@ -306,6 +306,14 @@
     }
   }
 
+  function toggleClass(element, className) {
+    if (hasClass(element, className)) {
+      removeClass(element, className);
+    } else {
+      addClass(element, className);
+    }
+  }
+
   yuanjs.addClass = addClass;
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
@@ -319,3 +327,4 @@
   yuanjs.getTransitionEndEventName = getTransitionEndEventName;
   yuanjs.has3dTransforms = has3dTransforms;
   yuanjs.getOffset = getOffset;
+  yuanjs.toggleClass = toggleClass;
