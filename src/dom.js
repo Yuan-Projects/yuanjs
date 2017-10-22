@@ -198,6 +198,11 @@
     return parent || document.body;
   }
 
+  function parent(element) {
+    var parentNode = element.parentNode;
+    return parentNode && parentNode.nodeType !== 11 ? parentNode : null;
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -225,4 +230,5 @@
   yuanjs.matchesSelector = matchesSelector;
   yuanjs.contains = contains;
   yuanjs.offsetParent = offsetParent;
+  yuanjs.parent = parent;
   yuanjs.text = text;
