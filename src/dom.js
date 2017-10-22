@@ -203,6 +203,17 @@
     return parentNode && parentNode.nodeType !== 11 ? parentNode : null;
   }
 
+  function prepend(parentNode, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    parentNode.insertBefore(newElement, parentNode.firstChild);
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -231,4 +242,5 @@
   yuanjs.contains = contains;
   yuanjs.offsetParent = offsetParent;
   yuanjs.parent = parent;
+  yuanjs.prepend = prepend;
   yuanjs.text = text;
