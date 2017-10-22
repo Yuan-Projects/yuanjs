@@ -214,6 +214,12 @@
     parentNode.insertBefore(newElement, parentNode.firstChild);
   }
 
+  function remove(element) {
+    if (element.parentNode) {
+      element.parentNode.removeChild(element);
+    }
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -243,4 +249,5 @@
   yuanjs.offsetParent = offsetParent;
   yuanjs.parent = parent;
   yuanjs.prepend = prepend;
+  yuanjs.remove = remove;
   yuanjs.text = text;
