@@ -291,12 +291,28 @@
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
 
+  function removeClass(element, className) {
+    if (!element || !element.className) return false;
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      var newClassName = element.className.split(/\s+/g).filter(function(cls) {
+        return cls !== className;
+      }).join(' ');
+
+      if (newClassName !== element.className) {
+        element.className = newClassName;
+      }
+    }
+  }
+
   yuanjs.addClass = addClass;
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
   yuanjs.position = position;
   yuanjs.offset = offset;
+  yuanjs.removeClass = removeClass;
   yuanjs.css = css;
   yuanjs.getTranslateXValue = getTranslateXValue;
   yuanjs.getTranslateYValue = getTranslateYValue;
