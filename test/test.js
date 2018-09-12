@@ -337,6 +337,46 @@ describe("Selectors tests", function(){
     });
   });
 
+  context("The offsetParent() function", function() {
+    it("#1", function() {
+      expect(yuanjs.offsetParent(document.getElementsByClassName('item-a')[0])).to.equal(document.getElementsByClassName('item-ii')[0]);
+    });
+  });
+
+  context("The parent() function", function() {
+    it("The parent node of li.item-a should be ul.level-2", function() {
+      expect(yuanjs.parent(document.getElementsByClassName('item-a')[0])).to.equal(document.getElementsByClassName('level-2')[0]);
+    });
+  });
+
+  context("The prepend() function", function() {
+    it("Prepend some text to an element", function() {
+      var parentNode = document.getElementsByClassName('item-i')[0];
+      yuanjs.prepend(parentNode, 'some text ');
+      expect(parentNode.innerHTML).to.equal('some text I');
+    });
+    it("Prepend DOM element to an element", function() {
+      var parentNode = document.getElementsByClassName('item-i')[0];
+      var newNode = document.createElement('p');
+      newNode.innerHTML = 'hello';
+      yuanjs.prepend(parentNode, newNode);
+      expect(parentNode.innerHTML).to.equal('<p>hello</p>some text I');
+    });
+  });
+
+  context("The remove() function", function() {
+    it("Remove an element from the document", function() {
+      yuanjs.remove(document.getElementById('toBeRemovedDiv'));
+      expect(document.getElementById('toBeRemovedDiv')).to.equal(null);
+    });
+  });
+
+  context("The siblings() function", function() {
+    it("There are two siblings for li.item-ii", function() {
+      expect(yuanjs.siblings(document.getElementsByClassName('item-ii')[0]).length).to.equal(2);
+    });
+  });
+
   context('The text() function', function() {
     it("Get the inner text of a div", function(done) {
       catchError(function(){

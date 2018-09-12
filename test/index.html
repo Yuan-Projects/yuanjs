@@ -27,7 +27,26 @@
     some text goes here
   </div>
   <div id="htmlFuncDiv" class="hidden">HTML <span>text</span></div>
-
+  <ul class="level-1" style="position: absolute; left: 0; top: 0; visibility: hidden;">
+    <li class="item-i">I</li>
+    <li class="item-ii" style="position: relative;">II
+      <ul class="level-2">
+        <li class="item-a">A</li>
+        <li class="item-b">B
+          <ul class="level-3">
+            <li class="item-1">1</li>
+            <li class="item-2">2</li>
+            <li class="item-3">3</li>
+          </ul>
+        </li>
+        <li class="item-c">C</li>
+      </ul>
+    </li>
+    <li class="item-iii">III</li>
+  </ul>
+  <div id="toBeRemovedDiv"></div>
+  <div id="cssTestDiv" class="cls1 cls2 cls3"></div>
+  <div id="toggleClassDiv" class="toggle1 toggle2"></div>
   <!--[if lt IE 8]>
     <script src="./testsuite/json2.min.js"></script>
   <![endif]-->

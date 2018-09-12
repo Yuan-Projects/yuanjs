@@ -28,4 +28,17 @@ describe("CSS tests", function(){
     expect(yuanjs.hasClass(dom2, "class2")).to.be.ok();
   });
 
+  it("RemoveClass() function", function() {
+    yuanjs.removeClass(document.getElementById('cssTestDiv'), 'cls3');
+    expect(document.getElementById('cssTestDiv').className).to.equal('cls1 cls2');
+  });
+
+  it("ToggleClass() function", function() {
+    yuanjs.toggleClass(document.getElementById('toggleClassDiv'), 'toggle1');
+    expect(document.getElementById('toggleClassDiv').className).to.equal('toggle2');
+    yuanjs.toggleClass(document.getElementById('toggleClassDiv'), 'toggle1');
+    expect(document.getElementById('toggleClassDiv').className).to.equal('toggle2 toggle1');
+
+  });
+
 });
