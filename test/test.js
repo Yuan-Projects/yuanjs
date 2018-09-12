@@ -96,15 +96,14 @@ describe("The Ajax Feature Tests", function() {
   });
 
   context("Cross domain Test", function() {
-    //this.timeout(15000);
     it('Cross domain GET test', function(done) {
       yuanjs.ajax({
-        url: 'http://192.168.2.102/projects/yuanjs/test/crossdomain.php',
+        url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22greenland%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
         type: 'GET',
         crossDomain: true,
         success: function(data) {
           catchError(function(){
-            expect(data).to.equal("PHP");
+            expect(JSON.parse(data).query.count).to.equal(1);
           }, done);
         },
         error: function() {
@@ -267,13 +266,13 @@ describe("Selectors tests", function(){
   context('The cssClass() function', function() {
     it("Get all elements with a class containing one class name", function(done) {
       catchError(function(){
-        expect(yuanjs.cssClass("cls1").length).to.be(1);
+        expect(yuanjs.cssClass("cls1").length).to.be(2);
       }, done);
     });
 
     it("Get all elements with a class containing two class names", function(done) {
       catchError(function(){
-        expect(yuanjs.cssClass("cls1 cls2").length).to.be(1);
+        expect(yuanjs.cssClass("cls1 cls2").length).to.be(2);
       }, done);
     });
   });
