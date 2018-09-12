@@ -11,7 +11,7 @@
 function YuanSet() {
   this.dataStore = [];
   Object.defineProperty(this, 'size', {
-    get() {
+    get() {// jshint ignore:line
       return this.dataStore.length;
     }
   });
