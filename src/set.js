@@ -10,11 +10,6 @@
 
 function YuanSet() {
   this.dataStore = [];
-  Object.defineProperty(this, 'size', {
-    get() {// jshint ignore:line
-      return this.dataStore.length;
-    }
-  });
 }
 
 YuanSet.prototype.add = function(value) {
@@ -59,3 +54,9 @@ YuanSet.prototype.values = function() {
 };
 
 YuanSet.prototype.keys = YuanSet.prototype.values;
+
+YuanSet.prototype.size = function() {
+  return this.dataStore.length;
+};
+
+yuanjs.Set = YuanSet;
