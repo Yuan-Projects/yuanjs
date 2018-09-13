@@ -9,7 +9,7 @@ Features:
  * Selectors
 
 Supported browsers:
- * Internet Explorer
+ * Internet Explorer 9+
  * Firefox
  * Chrome
  * Safari
