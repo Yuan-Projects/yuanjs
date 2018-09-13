@@ -39,11 +39,16 @@ describe("Class Set tests", function(){
     });
     it("Should append a new element correctly", function() {
       var set1 = new yuanjs.Set();
+      var obj = {
+        a: 1
+      };
       expect(set1.size()).to.equal(0);
       set1.add(42);
       expect(set1.size()).to.equal(1);
       set1.add(13);
       expect(set1.size()).to.equal(2);
+      set1.add(obj);
+      expect(set1.size()).to.equal(3);
     });
     it("Should not append a new element if already in the Set", function() {
       var set1 = new yuanjs.Set();
@@ -74,5 +79,29 @@ describe("Class Set tests", function(){
       expect(set1.size()).to.equal(0);
     });
   });
+
+
+  context('Set.prototype.delete Tests', function() {
+    it("Set.prototype.delete is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.delete).to.be.a('function');
+    });
+    it("Should remove specific elements correctly", function() {
+      var set1 = new yuanjs.Set();
+      var obj = {
+        a: 1
+      };
+      set1.add(1);
+      set1.add('foo');
+      set1.add(obj);
+      expect(set1.size()).to.equal(3);
+      set1.delete(1);
+      expect(set1.size()).to.equal(2);
+      set1.delete('foo');
+      expect(set1.size()).to.equal(1);
+      set1.delete(obj);
+      expect(set1.size()).to.equal(0);
+    });
+  });
+
 
 });
