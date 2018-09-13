@@ -857,6 +857,49 @@
     }
   }
 
+  function offsetParent(element) {
+    var parent = element.offsetParent;
+    while (parent && css(parent, "position") === "static") {
+      parent = parent.offsetParent;
+    }
+    return parent || document.body;
+  }
+
+  function parent(element) {
+    var parentNode = element.parentNode;
+    return parentNode && parentNode.nodeType !== 11 ? parentNode : null;
+  }
+
+  function prepend(parentNode, content) {
+    var newElement = null;
+    if (typeof content === "string") {
+      newElement = createDOMFromString(content);
+    } else if (isDOMNode(content)) {
+      newElement = content;
+    }
+    if (!newElement) return false;
+    parentNode.insertBefore(newElement, parentNode.firstChild);
+  }
+
+  function remove(element) {
+    if (element.parentNode) {
+      element.parentNode.removeChild(element);
+    }
+  }
+
+  function siblings(element) {
+    var arr = [];
+    var parent = element.parentNode;
+    var node = parent.firstChild;
+    while(node) {
+      if (node.nodeType === 1 && node !== element) {
+        arr.push(node);
+      }
+      node = node.nextSibling;
+    }
+    return arr;
+  }
+
   function text(element, newText) {
     if (newText === undefined) {
       return (typeof element.textContent === "string") ? element.textContent : element.innerText;
@@ -883,6 +926,11 @@
   yuanjs.cssClass = cssClass;
   yuanjs.matchesSelector = matchesSelector;
   yuanjs.contains = contains;
+  yuanjs.offsetParent = offsetParent;
+  yuanjs.parent = parent;
+  yuanjs.prepend = prepend;
+  yuanjs.remove = remove;
+  yuanjs.siblings = siblings;
   yuanjs.text = text;
 
   // Events on and off
@@ -1519,18 +1567,43 @@
     return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
   }
 
+  function removeClass(element, className) {
+    if (!element || !element.className) return false;
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      var newClassName = element.className.split(/\s+/g).filter(function(cls) {
+        return cls !== className;
+      }).join(' ');
+
+      if (newClassName !== element.className) {
+        element.className = newClassName;
+      }
+    }
+  }
+
+  function toggleClass(element, className) {
+    if (hasClass(element, className)) {
+      removeClass(element, className);
+    } else {
+      addClass(element, className);
+    }
+  }
+
   yuanjs.addClass = addClass;
   yuanjs.hasClass = hasClass;
   yuanjs.width = width;
   yuanjs.height = height;
   yuanjs.position = position;
   yuanjs.offset = offset;
+  yuanjs.removeClass = removeClass;
   yuanjs.css = css;
   yuanjs.getTranslateXValue = getTranslateXValue;
   yuanjs.getTranslateYValue = getTranslateYValue;
   yuanjs.getTransitionEndEventName = getTransitionEndEventName;
   yuanjs.has3dTransforms = has3dTransforms;
   yuanjs.getOffset = getOffset;
+  yuanjs.toggleClass = toggleClass;
 
 /**
  * Merge multiple objects dynamically with modifying either arguments.
@@ -1596,6 +1669,73 @@ function namespace(str, value) {
 yuanjs.extend = extend;
 yuanjs.namespace = namespace;
 
+/**
+ * Set Class: similar to ES2015 Set
+ *
+ * Browser Compatibility
+ * Array.prototype.indexOf: IE 9+
+ * Array.prototype.map: IE 9+
+ * Array.prototype.forEach: IE 9+
+ * Object.defineProperty: IE 9+
+ * Array.isArray: IE 9+
+ * Array.prototype.filter: IE 9+
+ */
+
+function YuanSet(iterable) {
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+  this.dataStore = Array.isArray(iterable) ? iterable.filter(onlyUnique) : [];
+}
+
+YuanSet.prototype.add = function(value) {
+  if (this.dataStore.indexOf(value) === -1) {
+    this.dataStore.push(value);
+  }
+  return this;
+};
+
+YuanSet.prototype.clear = function() {
+  this.dataStore = [];
+};
+
+YuanSet.prototype.delete = function(value) {
+  var index = this.dataStore.indexOf(value);
+  if (index > -1) {
+    this.dataStore.splice(index, 1);
+    return true;
+  }
+  return false;
+};
+
+YuanSet.prototype.entries = function() {
+  return this.dataStore.map(function(item) {
+    return [item, item];
+  });
+};
+
+YuanSet.prototype.forEach = function(callbackFn, thisArg) {
+  var that = this;
+  this.dataStore.forEach(function(item) {
+    callbackFn.call(thisArg, item, item, that);
+  });
+};
+
+YuanSet.prototype.has = function(value) {
+  return this.dataStore.indexOf(value) > -1;
+};
+
+YuanSet.prototype.values = function() {
+  return this.dataStore.slice();
+};
+
+YuanSet.prototype.keys = YuanSet.prototype.values;
+
+YuanSet.prototype.size = function() {
+  return this.dataStore.length;
+};
+
+yuanjs.Set = YuanSet;
   /**
    * Create synthetic DOM events.
    * @param {String} eventName The name of the event
