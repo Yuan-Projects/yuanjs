@@ -215,10 +215,65 @@ describe("Class Set tests", function(){
       set1.add(42);
       set1.add('forty two');
       var arr = set1.values();
-      debugger;
       expect(arr).to.be.an('array');
       expect(arr[0]).to.be(42);
       expect(arr[1]).to.be('forty two');
+    });
+  });
+
+  /** Static Methods **/
+
+  context('Set.isSuperset Tests', function() {
+    it('Set.isSuperset is defined', function() {
+      expect(yuanjs.Set.isSuperset).to.be.a('function');
+    });
+    it('Set([1, 2, 3, 4]) is super set of Set([2, 3])', function() {
+      var setA = new yuanjs.Set([1, 2, 3, 4]),
+          setB = new yuanjs.Set([2, 3]);
+      expect(yuanjs.Set.isSuperset(setA, setB)).to.be(true);
+    });
+    it('Set([1, 2, 3, 4]) is not super set of Set([2, 5])', function() {
+      var setA = new yuanjs.Set([1, 2, 3, 4]),
+          setB = new yuanjs.Set([2, 5]);
+      expect(yuanjs.Set.isSuperset(setA, setB)).to.be(false);
+    });
+  });
+
+  context('Set.union Tests', function() {
+    it('Set.union is defined', function() {
+      expect(yuanjs.Set.union).to.be.a('function');
+    });
+    it('Set([1, 2, 3, 4]) union Set([3, 4, 5, 6]) yields to Set([1, 2, 3, 4, 5, 6])', function() {
+      var setA = new Set([1, 2, 3, 4]),
+          setB = new Set([3, 4, 5, 6]),
+          setC = yuanjs.Set.union(setA, setB);
+      expect(setC.values()).to.eql([1, 2, 3, 4, 5, 6]);
+    });
+  });
+
+
+  context('Set.intersection Tests', function() {
+    it('Set.intersection is defined', function() {
+      expect(yuanjs.Set.intersection).to.be.a('function');
+    });
+    it('Set([1, 2, 3, 4]) intersection Set([3, 4, 5, 6]) yields to Set([3, 4])', function() {
+      var setA = new Set([1, 2, 3, 4]),
+          setB = new Set([3, 4, 5, 6]),
+          setC = yuanjs.Set.intersection(setA, setB);
+      expect(setC.values()).to.eql([3, 4]);
+    });
+  });
+
+
+  context('Set.difference Tests', function() {
+    it('Set.difference is defined', function() {
+      expect(yuanjs.Set.difference).to.be.a('function');
+    });
+    it('Set([1, 2, 3, 4]) difference Set([3, 4, 5, 6]) yields to Set([1, 2])', function() {
+      var setA = new Set([1, 2, 3, 4]),
+          setB = new Set([3, 4, 5, 6]),
+          setC = yuanjs.Set.difference(setA, setB);
+      expect(setC.values()).to.eql([1, 2]);
     });
   });
 
