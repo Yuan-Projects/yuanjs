@@ -6,10 +6,15 @@
  * Array.prototype.map: IE 9+
  * Array.prototype.forEach: IE 9+
  * Object.defineProperty: IE 9+
+ * Array.isArray: IE 9+
+ * Array.prototype.filter: IE 9+
  */
 
-function YuanSet() {
-  this.dataStore = [];
+function YuanSet(iterable) {
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+  this.dataStore = Array.isArray(iterable) ? iterable.filter(onlyUnique) : [];
 }
 
 YuanSet.prototype.add = function(value) {
@@ -41,7 +46,6 @@ YuanSet.prototype.entries = function() {
 YuanSet.prototype.forEach = function(callbackFn, thisArg) {
   var that = this;
   this.dataStore.forEach(function(item) {
-    // TODO: Check `this` value here.
     callbackFn.call(thisArg, item, item, that);
   });
 };
