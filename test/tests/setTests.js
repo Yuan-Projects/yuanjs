@@ -244,8 +244,8 @@ describe("Class Set tests", function(){
       expect(yuanjs.Set.union).to.be.a('function');
     });
     it('Set([1, 2, 3, 4]) union Set([3, 4, 5, 6]) yields to Set([1, 2, 3, 4, 5, 6])', function() {
-      var setA = new Set([1, 2, 3, 4]),
-          setB = new Set([3, 4, 5, 6]),
+      var setA = new yuanjs.Set([1, 2, 3, 4]),
+          setB = new yuanjs.Set([3, 4, 5, 6]),
           setC = yuanjs.Set.union(setA, setB);
       expect(setC.values()).to.eql([1, 2, 3, 4, 5, 6]);
     });
@@ -257,8 +257,8 @@ describe("Class Set tests", function(){
       expect(yuanjs.Set.intersection).to.be.a('function');
     });
     it('Set([1, 2, 3, 4]) intersection Set([3, 4, 5, 6]) yields to Set([3, 4])', function() {
-      var setA = new Set([1, 2, 3, 4]),
-          setB = new Set([3, 4, 5, 6]),
+      var setA = new yuanjs.Set([1, 2, 3, 4]),
+          setB = new yuanjs.Set([3, 4, 5, 6]),
           setC = yuanjs.Set.intersection(setA, setB);
       expect(setC.values()).to.eql([3, 4]);
     });
@@ -270,8 +270,8 @@ describe("Class Set tests", function(){
       expect(yuanjs.Set.difference).to.be.a('function');
     });
     it('Set([1, 2, 3, 4]) difference Set([3, 4, 5, 6]) yields to Set([1, 2])', function() {
-      var setA = new Set([1, 2, 3, 4]),
-          setB = new Set([3, 4, 5, 6]),
+      var setA = new yuanjs.Set([1, 2, 3, 4]),
+          setB = new yuanjs.Set([3, 4, 5, 6]),
           setC = yuanjs.Set.difference(setA, setB);
       expect(setC.values()).to.eql([1, 2]);
     });
