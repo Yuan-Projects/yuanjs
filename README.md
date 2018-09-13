@@ -7,6 +7,7 @@ Features:
  * Custom Events
  * DOM Events
  * Selectors
+ * Sets
 
 Supported browsers:
  * Internet Explorer 9+
