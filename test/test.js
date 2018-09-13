@@ -180,7 +180,7 @@ describe("Selectors tests", function(){
       var newElement = document.getElementById('myaftertest1');
       expect(newElement).to.be.ok();
       expect(newElement.innerHTML).to.equal('append');
-      expect(div.innerText).to.equal('Hello append');
+      expect(div.textContent).to.equal('Hello append');
       if (newElement) {
         div.parentNode.removeChild(div);
       }
@@ -200,7 +200,7 @@ describe("Selectors tests", function(){
       var ele = document.getElementById('myaftertest22');
       expect(ele).to.be.ok();
       expect(ele.innerHTML).to.equal('append');
-      expect(eleParent.innerText).to.equal('Hello append');
+      expect(eleParent.textContent).to.equal('Hello append');
       if (eleParent) {
         eleParent.parentNode.removeChild(eleParent);
       }
