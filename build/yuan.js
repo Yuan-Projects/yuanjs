@@ -1735,6 +1735,46 @@ YuanSet.prototype.size = function() {
   return this.dataStore.length;
 };
 
+YuanSet.isSuperset = function(set, subSet) {
+  var subSetValues = subSet.values();
+  for (var i = subSetValues.length - 1; i >= 0; i--) {
+    if (!set.has(subSetValues[i])) {
+      return false;
+    }
+  }
+  return true;
+};
+
+YuanSet.union = function(setA, setB) {
+  var _union = new YuanSet();
+  var _func = function(item) {
+    _union.add(item);
+  };
+  setA.forEach(_func);
+  setB.forEach(_func);
+  return _union;
+};
+
+YuanSet.intersection = function(setA, setB) {
+  var _intersection = new YuanSet();
+  setA.forEach(function(item) {
+    if (setB.has(item)) {
+      _intersection.add(item);
+    }
+  });
+  return _intersection;
+};
+
+YuanSet.difference = function(setA, setB) {
+  var _difference = new YuanSet();
+  setA.forEach(function(item) {
+    if (!setB.has(item)) {
+      _difference.add(item);
+    }
+  });
+  return _difference;
+};
+
 yuanjs.Set = YuanSet;
   /**
    * Create synthetic DOM events.
