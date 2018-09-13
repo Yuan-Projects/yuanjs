@@ -148,6 +148,19 @@ describe("Class Set tests", function(){
       set1.add('foo');
       set1.forEach(logSetElements);
     });
+
+    it("The second parameter of forEach should be use as `this` when executing callback", function() {
+      function logSetElements(value1, value2, set) {
+        expect(this.a).to.equal('1');
+      }
+      var set1 = new yuanjs.Set();
+      var obj = {
+        a: '1'
+      };
+      set1.add('foo');
+      set1.forEach(logSetElements, obj);
+    });
+
   });
 
 });
