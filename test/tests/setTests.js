@@ -3,6 +3,24 @@ describe("Class Set tests", function(){
     expect(typeof yuanjs.Set).to.equal('function');
   });
 
+
+  context('Set.prototype.constructor Tests', function() {
+    it("Set.prototype.constructor is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.constructor).to.be.a('function');
+    });
+    it("Set.prototype.constructor is the Set function by default", function() {
+      expect(yuanjs.Set.prototype.constructor).to.be(yuanjs.Set);
+    });
+    it("Use the constructor to create an instance", function() {
+      var instance = new yuanjs.Set([1, 2, 3, 4, 5]);
+      expect(instance.size()).to.equal(5);
+    });
+    it("The return value should be a new Set object", function() {
+      var instance = new yuanjs.Set([1, 2, 3, 4, 5]);
+      expect(instance).to.be.a(yuanjs.Set);
+    });
+  });
+
   context('Set.prototype.size Tests', function() {
     it("Set.prototype.size is defined and is of function type.", function() {
       expect(yuanjs.Set.prototype.size).to.be.a('function');
@@ -161,6 +179,47 @@ describe("Class Set tests", function(){
       set1.forEach(logSetElements, obj);
     });
 
+  });
+
+
+  context('Set.prototype.has Tests', function() {
+    it("Set.prototype.has is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.has).to.be.a('function');
+    });
+    it("Set([1, 2, 3, 4, 5]) has 1", function() {
+      var set1 = new yuanjs.Set([1, 2, 3, 4, 5]);
+      expect(set1.has(1)).to.be(true);
+    });
+    it("Set([1, 2, 3, 4, 5]) does not have 6", function() {
+      var set1 = new yuanjs.Set([1, 2, 3, 4, 5]);
+      expect(set1.has(6)).to.be(false);
+    });
+  });
+
+
+  context('Set.prototype.keys Tests', function() {
+    it("Set.prototype.keys is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.keys).to.be.a('function');
+    });
+    it("Shoud be the same function as the values() function", function() {
+      expect(yuanjs.Set.prototype.keys).to.be(yuanjs.Set.prototype.values);
+    });
+  });
+
+  context('Set.prototype.values Tests', function() {
+    it("Set.prototype.values is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.values).to.be.a('function');
+    });
+    it("Should return a new array that contains the values for each element in the Set object in insertion order", function() {
+      var set1 = new yuanjs.Set();
+      set1.add(42);
+      set1.add('forty two');
+      var arr = set1.values();
+      debugger;
+      expect(arr).to.be.an('array');
+      expect(arr[0]).to.be(42);
+      expect(arr[1]).to.be('forty two');
+    });
   });
 
 });
