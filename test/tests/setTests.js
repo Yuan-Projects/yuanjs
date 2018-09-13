@@ -103,5 +103,51 @@ describe("Class Set tests", function(){
     });
   });
 
+  context('Set.prototype.entries Tests', function() {
+    it("Set.prototype.entries is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.entries).to.be.a('function');
+    });
+    it("Should return the correct array in insertion order", function() {
+      var set1 = new yuanjs.Set();
+      set1.add(42);
+      set1.add('forty two');
+      var arr = set1.entries();
+
+      expect(arr[0][0]).to.be(42);
+      expect(arr[0][1]).to.be(42);
+
+      expect(arr[1][0]).to.be('forty two');
+      expect(arr[1][1]).to.be('forty two');
+    });
+  });
+
+  context('Set.prototype.forEach Tests', function() {
+    it("Set.prototype.forEach is defined and is of function type.", function() {
+      expect(yuanjs.Set.prototype.forEach).to.be.a('function');
+    });
+    it("Calls callbackFn once for each value present in the Set object, in insertion order", function() {
+      var arr = [];
+      function logSetElements(value1, value2, set) {
+        arr.push('s[' + value1 + '] = ' + value2);
+      }
+      var set1 = new yuanjs.Set();
+      set1.add('foo');
+      set1.add('bar');
+      set1.add(undefined);
+      set1.forEach(logSetElements);
+      expect(arr[0]).to.equal("s[foo] = foo");
+      expect(arr[1]).to.equal("s[bar] = bar");
+      expect(arr[2]).to.equal("s[undefined] = undefined");
+    });
+
+    it("The third parameter of the callback function should be the Set object", function() {
+      function logSetElements(value1, value2, set) {
+        expect(set).to.equal(set1);
+      }
+      var set1 = new yuanjs.Set();
+      set1.add('foo');
+      set1.forEach(logSetElements);
+    });
+  });
 
 });
