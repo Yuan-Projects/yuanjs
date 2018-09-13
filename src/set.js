@@ -39,9 +39,10 @@ YuanSet.prototype.entries = function() {
 };
 
 YuanSet.prototype.forEach = function(callbackFn, thisArg) {
+  var that = this;
   this.dataStore.forEach(function(item) {
     // TODO: Check `this` value here.
-    callbackFn.call(thisArg, item, item, this);
+    callbackFn.call(thisArg, item, item, that);
   });
 };
 
