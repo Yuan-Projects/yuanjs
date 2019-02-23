@@ -66,7 +66,7 @@
   
   // DOM Events
 
-  (function(){
+  
     var nextGuid = 1;
     function addEvent(elem, type, fn) {
       var data = yuanjs.getData(elem);
@@ -193,12 +193,12 @@
     
     // Document ready event.
     // http://stackoverflow.com/a/9899701
-    (function(funcName, baseObj) {
+    const documentReady = (function() {
       // The public function name defaults to window.docReady
       // but you can pass in your own object and own function name and those will be used
       // if you want to put them in a different namespace
-      funcName = funcName || "docReady";
-      baseObj = baseObj || window;
+      //funcName = funcName || "docReady";
+      //baseObj = baseObj || window;
       var readyList = [];
       var readyFired = false;
       var readyEventHandlersInstalled = false;
@@ -233,7 +233,7 @@
       // docReady(fn, context);
       // the context argument is optional - if present, it will be passed
       // as an argument to the callback
-      baseObj[funcName] = function(callback, context) {
+      return function(callback, context) {
         // if ready has already fired, then just schedule the callback
         // to fire asynchronously, but right away
         if (readyFired) {
@@ -261,9 +261,11 @@
           readyEventHandlersInstalled = true;
         }
       };
-    })("documentReady", yuanjs);
-
-    yuanjs.addEvent = addEvent;
-    yuanjs.removeEvent = removeEvent;
-    yuanjs.triggerEvent = triggerEvent;
-  })();
+    })();
+  
+export {
+  addEvent,
+  documentReady,
+  removeEvent,
+  triggerEvent
+};

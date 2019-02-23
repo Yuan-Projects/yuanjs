@@ -66,5 +66,7 @@
     }
   }
 
-  yuanjs.CustomEvent = SyntheticEvent;
-  yuanjs.dispatchCustomEvent = dispatchSyntheticEvent;
+export {
+  CustomEvent: SyntheticEvent,
+  dispatchCustomEvent: dispatchSyntheticEvent
+};

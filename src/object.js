@@ -59,5 +59,8 @@ function namespace(str, value) {
     }
   }
 }
-yuanjs.extend = extend;
-yuanjs.namespace = namespace;
+
+export {
+  extend,
+  namespace
+};

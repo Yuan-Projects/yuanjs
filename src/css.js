@@ -314,17 +314,19 @@
     }
   }
 
-  yuanjs.addClass = addClass;
-  yuanjs.hasClass = hasClass;
-  yuanjs.width = width;
-  yuanjs.height = height;
-  yuanjs.position = position;
-  yuanjs.offset = offset;
-  yuanjs.removeClass = removeClass;
-  yuanjs.css = css;
-  yuanjs.getTranslateXValue = getTranslateXValue;
-  yuanjs.getTranslateYValue = getTranslateYValue;
-  yuanjs.getTransitionEndEventName = getTransitionEndEventName;
-  yuanjs.has3dTransforms = has3dTransforms;
-  yuanjs.getOffset = getOffset;
-  yuanjs.toggleClass = toggleClass;
+export {
+  addClass,
+  hasClass,
+  width,
+  height,
+  position,
+  offset,
+  removeClass,
+  css,
+  getTranslateXValue,
+  getTranslateYValue,
+  getTransitionEndEventName,
+  has3dTransforms,
+  getOffset,
+  toggleClass
+};

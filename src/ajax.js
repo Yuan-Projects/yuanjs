@@ -1,3 +1,6 @@
+import Deferred from './deferred';
+import { encodeFormatData } from './helper';
+
   /**
    * Ajax request
    *
@@ -136,8 +139,7 @@
     }
     return dtd.promise();
   }
-  yuanjs.ajax = ajax;
-    
+
   // Inspired by jQuery
   function loadScript(src, successCallback, errorCallback) {
     var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
@@ -177,5 +179,8 @@
 	  // Use native DOM manipulation to avoid our domManip AJAX trickery
     head.insertBefore(script, head.firstChild);
   }
-  
-  yuanjs.loadScript = loadScript;
+
+export {
+  ajax,
+  loadScript
+};

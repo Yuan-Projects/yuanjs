@@ -10,4 +10,5 @@
       }
     }
   }
-  yuanjs.log = log;
+
+export default log;

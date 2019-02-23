@@ -58,7 +58,9 @@
     }
   }
 
-  yuanjs.fadeIn = fadeIn;
-  yuanjs.hide = hide;
-  yuanjs.show = show;
-  yuanjs.toggle = toggle;
+export {
+  fadeIn,
+  hide,
+  show,
+  toggle
+};

@@ -104,4 +104,4 @@ YuanSet.difference = function(setA, setB) {
   return _difference;
 };
 
-yuanjs.Set = YuanSet;
+export default YuanSet;

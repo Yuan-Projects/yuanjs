@@ -1,5 +1,5 @@
 
-  (function(){
+
     var cache = {},
         guidCounter = 1,
         expando = "data" + (new Date()).getTime();
@@ -26,6 +26,7 @@
       }
     }
 
-    yuanjs.getData = getData;
-    yuanjs.removeData = removeData;
-  })();
+export {
+  getData,
+  removeData
+};

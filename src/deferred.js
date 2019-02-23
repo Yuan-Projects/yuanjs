@@ -57,6 +57,5 @@
       }
     };
   }
-  
-  yuanjs.Deferred = Deferred;
-  
+
+export default Deferred;

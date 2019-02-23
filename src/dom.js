@@ -1,3 +1,4 @@
+import { css } from './css';
   /**
    * DOM Manipulation
    *
@@ -245,23 +246,27 @@
     }
   }
 
-  yuanjs.after = after;
-  yuanjs.append = append;
-  yuanjs.before = before;
-  yuanjs.children = children;
-  yuanjs.clone = clone;
-  yuanjs.empty = empty;
-  yuanjs.filter = filterNode;
-  yuanjs.find = findNode;
-  yuanjs.html = html;
-  yuanjs.id = id;
-  yuanjs.tag = tag;
-  yuanjs.cssClass = cssClass;
-  yuanjs.matchesSelector = matchesSelector;
-  yuanjs.contains = contains;
-  yuanjs.offsetParent = offsetParent;
-  yuanjs.parent = parent;
-  yuanjs.prepend = prepend;
-  yuanjs.remove = remove;
-  yuanjs.siblings = siblings;
-  yuanjs.text = text;
+const filter = filterNode;
+const find = findNode;
+export {
+  after,
+  append,
+  before,
+  children,
+  clone,
+  empty,
+  filter,
+  find,
+  html,
+  id,
+  tag,
+  cssClass,
+  matchesSelector,
+  contains,
+  offsetParent,
+  parent,
+  prepend,
+  remove,
+  siblings,
+  text
+};

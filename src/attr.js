@@ -44,4 +44,4 @@
     return propertyExists ? element[property] : element.getAttribute(name);
   }
   
-  yuanjs.attr = attr;
+export default attr;

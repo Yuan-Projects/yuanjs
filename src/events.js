@@ -33,6 +33,9 @@
       callbackArray[i].apply(callbackArray[i], args);
     }
   }
-  yuanjs.on = on;
-  yuanjs.off = off;
-  yuanjs.trigger = trigger;
+
+export {
+  on,
+  off,
+  trigger
+};

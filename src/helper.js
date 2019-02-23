@@ -193,16 +193,16 @@
    * @param {Object} param Object to test whether or not it is an array
    * @returns {Boolean}
    */
-  yuanjs.isArray =  Array.isArray || function(param) {
+  function isArray(param) {
+    if (Array.isArray) {
+      return Array.isArray(param);
+    }
     return Object.prototype.toString.call(param) === "[object Array]";
-  };
+  }
 
   function inArray(value, array, fromIndex) {
     return Array.prototype.indexOf.call(array, value, fromIndex);
   }
-
-  yuanjs.inArray = inArray;
-
 
   /**
    * Check to see if an object is empty (contains no enumerable properties).
@@ -286,7 +286,7 @@
 
 
   // A function for defining simple classes.
-  function _createClass(Constructor, protoProps, staticProps) {
+  function createClass(Constructor, protoProps, staticProps) {
     function defineProperties(target, props) {
       for (var i = 0; i < props.length; i++) {
         var descriptor = props[i];
@@ -320,16 +320,21 @@
     return Constructor;
   }
 
-  yuanjs.createClass = _createClass;
-  yuanjs.isEmptyObject = isEmptyObject;
-  yuanjs.isNumber = isNumber;
-  yuanjs.isNumeric = isNumeric;
-  yuanjs.isInteger = isInteger;
-  yuanjs.isString = isString;
-  yuanjs.isFunction = isFunction;
-  yuanjs.isNull = isNull;
-  yuanjs.isUndefined = isUndefined;
-  yuanjs.isEmpty = isEmpty;
-  yuanjs.replaceAll = replaceAll;
-  yuanjs.trim = trim;
-  yuanjs.urlArgs = urlArgs;
+export {
+  createClass,
+  encodeFormatData,
+  isArray,
+  isEmptyObject,
+  isNumber,
+  isNumeric,
+  isInteger,
+  isString,
+  isFunction,
+  isNull,
+  isUndefined,
+  isEmpty,
+  inArray,
+  replaceAll,
+  trim,
+  urlArgs,
+};
