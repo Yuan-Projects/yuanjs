@@ -2,20 +2,24 @@
   "name": "YuanJS",
   "version": "0.0.4",
   "description": "YuanJS, just another small JavaScript library",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js"
+  },
   "keywords": [
     "yuanjs",
     "YuanJS"
   ],
-  "homepage": "https://github.com/rainyjune/yuanjs",
+  "homepage": "https://github.com/Yuan-Projects/yuanjs",
   "bugs": {
-    "url": "https://github.com/rainyjune/yuanjs/issues"
+    "url": "https://github.com/Yuan-Projects/yuanjs/issues"
   },
   "license": "MIT",
   "author": "Kang CHEN <rainyjune@live.cn>",
   "main": "build/yuan.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rainyjune/yuanjs.git"
+    "url": "https://github.com/Yuan-Projects/yuanjs.git"
   },
   "dependencies": {
     "grunt": "~0.4.5",
@@ -26,6 +30,8 @@
   },
   "devDependencies": {
     "mocha": "^2.3.4",
-    "should": "^7.1.1"
+    "should": "^7.1.1",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   }
 }
