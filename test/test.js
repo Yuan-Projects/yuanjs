@@ -62,6 +62,7 @@ describe("The Ajax Feature Tests", function() {
           description: "a web developer"
         },
         success: function(data) {
+          data = JSON.parse(data);
           catchError(function() {
             expect(data.name).to.equal("kang");
             expect(data.description).to.equal("a web developer");
@@ -98,7 +99,7 @@ describe("The Ajax Feature Tests", function() {
   context("Cross domain Test", function() {
     it('Cross domain GET test', function(done) {
       yuanjs.ajax({
-        url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22greenland%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
+        url: 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22greenland%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
         type: 'GET',
         crossDomain: true,
         success: function(data) {
