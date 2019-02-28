@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   entry: "./src/index",
   output: {
     path: path.resolve(__dirname, "build"),
@@ -28,5 +28,8 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".json", ".jsx", ".css"]
+  },
+  devServer: {
+    contentBase: [path.join(__dirname, 'test'), path.join(__dirname, 'build')]
   }
 };

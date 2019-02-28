@@ -3,6 +3,7 @@
   "version": "0.0.4",
   "description": "YuanJS, just another small JavaScript library",
   "scripts": {
+    "start": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.js"
   },
@@ -30,6 +31,7 @@
     "mocha": "^2.3.4",
     "should": "^7.1.1",
     "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
   }
 }
