@@ -99,12 +99,12 @@ describe("The Ajax Feature Tests", function() {
   context("Cross domain Test", function() {
     it('Cross domain GET test', function(done) {
       yuanjs.ajax({
-        url: 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22greenland%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys',
+        url: 'http://127.0.0.1:8080/test.json',
         type: 'GET',
         crossDomain: true,
         success: function(data) {
           catchError(function(){
-            expect(JSON.parse(data).query.count).to.equal(1);
+            expect(JSON.parse(data).author).to.equal("rainyjune");
           }, done);
         },
         error: function() {
