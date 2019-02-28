@@ -31,6 +31,12 @@ module.exports = {
     extensions: [".js", ".json", ".jsx", ".css"]
   },
   devServer: {
+    /* Enable CORS for Ajax tests */
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    },
     before: function(app, server) {
       // parse application/x-www-form-urlencoded
       app.use(bodyParser.urlencoded({ extended: false }))
