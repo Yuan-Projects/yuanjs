@@ -24,12 +24,7 @@ Clone a copy of the main YuanJS git repo by running:
 
 Enter the YuanJS directory and install required grunt plugins:
 
-    cd yuanjs && npm install && grunt
+    cd yuanjs && npm install
+    npm start
 
-The bundled files will be replaced in the `build` directory. `yuan.js` is the development version, `yuan.min.js` is the production version.
-
-If you are interested in this project and want tweak it, running the following in your command line:
-
-    grunt watch
-    
-Grunt will watch the resource files and generate the bundled files automatically for you after you made any changes in any file of the watch list.
+The bundled files will be replaced in the `build` directory.
