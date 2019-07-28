@@ -249,24 +249,30 @@
     return Object.prototype.toString.call(param) === '[object Function]';
   }
 
-  function isNull(param) {
-    return param === null;
-  }
-
   function isNumeric(obj) {
     return !isNaN(parseFloat(obj)) && isFinite(obj);
   }
 
+  /**
+   * Determine whether a variable has been declared.
+   * @param {*} param - The variable to test
+   * @returns {boolean} Return true if the variable hasn't been declared, otherwise false.
+   */
   function isUndefined(param) {
     return typeof param === "undefined";
   }
 
+  /**
+   * Determine whether a string is either empty or filled with white spaces.
+   * @param {string} param - The string to test
+   * @return {boolean} Returns true if it is empty or filled with white spaces, otherwise false.
+   */
   function isEmpty(param) {
     return /^\s*$/.test(param);
   }
 
   /**
-   * Replace multiple string with multiple other strings.
+   * Replace multiple strings with multiple other strings.
    * @param {string} str - The original string to modify
    * @param {Object} mapObj - Keys/value pairs to do the replacement.
    * @return {string} A new string
@@ -360,7 +366,6 @@ export {
   isInteger,
   isString,
   isFunction,
-  isNull,
   isUndefined,
   isEmpty,
   inArray,
