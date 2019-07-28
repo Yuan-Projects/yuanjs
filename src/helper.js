@@ -277,6 +277,11 @@
     return args;                               // Return the parsed arguments
   }
 
+  /**
+   * Check whether a value is an integer.
+   * @param {mixed} value - The value to test.
+   * @return {boolean} Returns true if the value is an integer, otherwise false.
+   */
   function isInteger(value) {
     if (Number.isInteger) {
       return Number.isInteger(value);
