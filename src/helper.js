@@ -265,12 +265,18 @@
     return /^\s*$/.test(param);
   }
 
+  /**
+   * Replace multiple string with multiple other strings.
+   * @param {string} str - The original string to modify
+   * @param {Object} mapObj - Keys/value pairs to do the replacement.
+   * @return {string} A new string
+   */
   // http://stackoverflow.com/a/15604206
   function replaceAll(str,mapObj) {
     var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
 
     return str.replace(re, function(matched){
-        return mapObj[matched.toLowerCase()];
+      return mapObj[matched.toLowerCase()];
     });
   }
 
