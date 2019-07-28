@@ -274,18 +274,25 @@
     });
   }
 
-  function urlArgs() {
+  /**
+   * Returns query string parameters from a query string.
+   *
+   * @param {string} [queryString] - The query string, defaults to the document query string of current page.
+   * @return {Object} Returns all key/value pairs in the query string.
+   */
+  function urlArgs(queryString) {
+    queryString = queryString || location.search;
     var args = {};                             // Start with an empty object
-    var query = location.search.substring(1);  // Get query string, minus '?'
+    var query = queryString.substring(1);  // Get query string, minus '?'
     var pairs = query.split("&");              // Split at ampersands
     for(var i = 0; i < pairs.length; i++) {    // For each fragment
-        var pos = pairs[i].indexOf('=');       // Look for "name=value"
-        if (pos == -1) continue;               // If not found, skip it
-        var name = pairs[i].substring(0,pos);  // Extract the name
-        var value = pairs[i].substring(pos+1); // Extract the value
-        name = decodeURIComponent(name);       // Decode the name
-        value = decodeURIComponent(value);     // Decode the value
-        args[name] = value;                    // Store as a property
+      var pos = pairs[i].indexOf('=');       // Look for "name=value"
+      if (pos == -1) continue;               // If not found, skip it
+      var name = pairs[i].substring(0,pos);  // Extract the name
+      var value = pairs[i].substring(pos+1); // Extract the value
+      name = decodeURIComponent(name);       // Decode the name
+      value = decodeURIComponent(value);     // Decode the value
+      args[name] = value;                    // Store as a property
     }
     return args;                               // Return the parsed arguments
   }
