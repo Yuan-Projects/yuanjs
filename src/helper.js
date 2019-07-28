@@ -203,7 +203,7 @@
   /**
    * Search for a specified value within an array and return its index (or -1 if not found).
    *
-   * @param {mixed} value - Element to locate
+   * @param {*} value - Element to locate
    * @param {Array} array - The array to search from
    * @return {number} Returns the first index at which a given element can be found in the array, or -1 not found.
    */
@@ -292,7 +292,7 @@
 
   /**
    * Check whether a value is an integer.
-   * @param {mixed} value - The value to test.
+   * @param {*} value - The value to test.
    * @return {boolean} Returns true if the value is an integer, otherwise false.
    */
   function isInteger(value) {
