@@ -200,6 +200,13 @@
     return Object.prototype.toString.call(param) === "[object Array]";
   }
 
+  /**
+   * Search for a specified value within an array and return its index (or -1 if not found).
+   *
+   * @param {mixed} value - Element to locate
+   * @param {Array} array - The array to search from
+   * @return {number} Returns the first index at which a given element can be found in the array, or -1 not found.
+   */
   function inArray(value, array, fromIndex) {
     return Array.prototype.indexOf.call(array, value, fromIndex);
   }
@@ -220,6 +227,12 @@
     return !isNaN(param);
   }
 
+  /**
+   * Determine if the argument passed is a string.
+   *
+   * @param {Object} param Object to test whether or not it is a string.
+   * @returns {Boolean}
+   */
   function isString(param) {
     return typeof param === "string";
   }
@@ -288,7 +301,6 @@
     }
     return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
   }
-
 
   // A function for defining simple classes.
   function createClass(Constructor, protoProps, staticProps) {
