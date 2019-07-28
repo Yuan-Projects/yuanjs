@@ -6,7 +6,7 @@ module.exports = {
   entry: "./src/index",
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: "bundle.js",
+    filename: "yuan.js",
     library: "yuanjs",
     libraryTarget: "umd"
   },
