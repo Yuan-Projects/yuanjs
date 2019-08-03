@@ -276,6 +276,9 @@
   function urlArgs(queryString) {
     queryString = queryString || location.search;
     var args = {};                             // Start with an empty object
+    var decodeParam = function(str) {
+      return decodeURIComponent(str.replace(/\+/g, " "));
+    };
     var query = queryString.substring(1);  // Get query string, minus '?'
     var pairs = query.split("&");              // Split at ampersands
     for(var i = 0; i < pairs.length; i++) {    // For each fragment
@@ -283,8 +286,8 @@
       if (pos == -1) continue;               // If not found, skip it
       var name = pairs[i].substring(0,pos);  // Extract the name
       var value = pairs[i].substring(pos+1); // Extract the value
-      name = decodeURIComponent(name);       // Decode the name
-      value = decodeURIComponent(value);     // Decode the value
+      name = decodeParam(name);       // Decode the name
+      value = decodeParam(value);     // Decode the value
       args[name] = value;                    // Store as a property
     }
     return args;                               // Return the parsed arguments
