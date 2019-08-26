@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "description": "YuanJS, just another small JavaScript library",
   "scripts": {
-    "start": "webpack-dev-server --open",
-    "test": "webpack-dev-server --open",
-    "build": "webpack --config webpack.config.js"
+    "build": "rollup --config"
   },
   "keywords": [
     "yuanjs",
@@ -33,9 +31,6 @@
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-uglify": "^6.0.2",
-    "should": "^7.1.1",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.2.1"
+    "should": "^7.1.1"
   }
 }
