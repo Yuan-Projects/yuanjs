@@ -8,6 +8,8 @@ export * from './events';
 export * from './functions';
 export * from './domEvents';
 
+export const version = "0.1.0";
+
 export {
   Deferred,
   Set

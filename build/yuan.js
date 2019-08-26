@@ -1748,6 +1748,8 @@
     };
   }();
 
+  var version = "0.1.0";
+
   exports.Deferred = Deferred;
   exports.Set = YuanSet;
   exports.addClass = addClass;
@@ -1808,6 +1810,7 @@
   exports.triggerEvent = triggerEvent;
   exports.trim = trim;
   exports.urlArgs = urlArgs;
+  exports.version = version;
   exports.width = width;
 
   Object.defineProperty(exports, '__esModule', { value: true });

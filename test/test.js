@@ -1,4 +1,10 @@
 describe("Core tests", function() {
+  describe('version', function() {
+    it('Has the version property', function() {
+      expect(yuanjs.version).to.be.ok();;
+    });
+  });
+
   describe('The trim() function tests', function() {
     it('"   foo  " was trimed to "foo"', function() {
       expect(yuanjs.trim("   foo  ")).to.be('foo');
