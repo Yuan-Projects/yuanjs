@@ -1,23 +1,31 @@
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import { uglify } from "rollup-plugin-uglify";
+import typescript from 'rollup-plugin-typescript2';
+import uglify from "@lopatnov/rollup-plugin-uglify";
 
-const getConfig = (isProduction = true) => {
-  return {
-    input: 'src/index.js',
-    output: {
-      file: isProduction ? 'build/yuan.min.js' : 'build/yuan.js',
-      format: 'umd',
-      name: 'yuanjs'
-    },
-    plugins: [
-      resolve(),
-      babel({
-        exclude: 'node_modules/**' // only transpile our source code
-      }),
-      isProduction && uglify()
-    ]
-  };
-};
-
-export default [getConfig(false), getConfig()];
+export default [
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'build/yuan.js',
+        format: 'umd',
+        name: 'yuanjs'
+      },
+      {
+        file: 'build/yuan.esm.js',
+        format: 'es',
+      },
+    ],
+    plugins: [typescript()]
+  },
+  {
+    input: 'src/index.ts',
+    output: [
+      {
+        file: 'build/yuan.min.js',
+        format: 'umd',
+        name: 'yuanjs'
+      },
+    ],
+    plugins: [typescript(), uglify()]
+  },
+];
