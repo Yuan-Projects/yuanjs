@@ -3,7 +3,7 @@
  *
  */
 
-function encodeFormatData(data: string | object) {
+function encodeFormatData(data: string | object): string {
   if (!data) return ""; // Always return a string
   if (typeof data === "string") return data;
   var pairs: any = []; // To hold name=value pairs
@@ -38,7 +38,7 @@ function encodeFormatData(data: string | object) {
   return pairs.join("&"); // Return joined pairs separated with &
 }
 
-function trim(str: string) {
+function trim(str: string): string {
   if (String.prototype.trim) {
     return str.trim();
   } else {
@@ -98,7 +98,7 @@ if (!Object.keys) {
  * @param {Object} param Object to test whether or not it is an array
  * @returns {Boolean}
  */
-function isArray(param: any) {
+function isArray(param: any): boolean {
   if (Array.isArray) {
     return Array.isArray(param);
   }
@@ -112,7 +112,7 @@ function isArray(param: any) {
  * @param {Array} array - The array to search from
  * @return {number} Returns the first index at which a given element can be found in the array, or -1 not found.
  */
-function inArray(value: any, array: any[], fromIndex: number) {
+function inArray(value: any, array: any[], fromIndex: number): number {
   return Array.prototype.indexOf.call(array, value, fromIndex);
 }
 
@@ -120,7 +120,7 @@ function inArray(value: any, array: any[], fromIndex: number) {
  * Check to see if an object is empty (contains no enumerable properties).
  *
  */
-function isEmptyObject(obj: object) {
+function isEmptyObject(obj: object): boolean {
   var name;
   for (name in obj) {
     return false;
@@ -128,7 +128,7 @@ function isEmptyObject(obj: object) {
   return true;
 }
 
-function isNumber(param: any) {
+function isNumber(param: any): boolean {
   return !isNaN(param);
 }
 
@@ -138,7 +138,7 @@ function isNumber(param: any) {
  * @param {Object} param Object to test whether or not it is a string.
  * @returns {Boolean}
  */
-function isString(param: any) {
+function isString(param: any): boolean {
   return typeof param === "string";
 }
 
@@ -150,11 +150,11 @@ function isString(param: any) {
  * @param {Object} param Object to test whether or not it is a function
  * @returns {Boolean}
  */
-function isFunction(param: any) {
+function isFunction(param: any): boolean {
   return Object.prototype.toString.call(param) === "[object Function]";
 }
 
-function isNumeric(obj: any) {
+function isNumeric(obj: any): boolean {
   return !isNaN(parseFloat(obj)) && isFinite(obj);
 }
 
@@ -163,7 +163,7 @@ function isNumeric(obj: any) {
  * @param {*} param - The variable to test
  * @returns {boolean} Return true if the variable hasn't been declared, otherwise false.
  */
-function isUndefined(param: any) {
+function isUndefined(param: any): boolean {
   return typeof param === "undefined";
 }
 
@@ -172,7 +172,7 @@ function isUndefined(param: any) {
  * @param {string} param - The string to test
  * @return {boolean} Returns true if it is empty or filled with white spaces, otherwise false.
  */
-function isEmpty(param: string) {
+function isEmpty(param: string): boolean {
   return /^\s*$/.test(param);
 }
 
@@ -183,7 +183,7 @@ function isEmpty(param: string) {
  * @return {string} A new string
  */
 // http://stackoverflow.com/a/15604206
-function replaceAll(str: string, mapObj: object) {
+function replaceAll(str: string, mapObj: object): string {
   var re = new RegExp(Object.keys(mapObj).join("|"), "gi");
 
   return str.replace(re, function (matched) {
@@ -197,7 +197,7 @@ function replaceAll(str: string, mapObj: object) {
  * @param {string} [queryString] - The query string, defaults to the document query string of current page.
  * @return {Object} Returns all key/value pairs in the query string.
  */
-function urlArgs(queryString: string) {
+function urlArgs(queryString: string): object {
   queryString = queryString || location.search;
   var args: any = {}; // Start with an empty object
   var decodeParam = function (str: string) {
@@ -223,10 +223,8 @@ function urlArgs(queryString: string) {
  * @param {*} value - The value to test.
  * @return {boolean} Returns true if the value is an integer, otherwise false.
  */
-function isInteger(value: any) {
-  // @ts-ignore
+function isInteger(value: any): boolean {
   if (Number.isInteger) {
-    // @ts-ignore
     return Number.isInteger(value);
   }
   return (
@@ -235,11 +233,11 @@ function isInteger(value: any) {
 }
 
 // A function for defining simple classes.
-function createClass(
-  Constructor: any,
+function createClass<Type extends typeof Object>(
+  Constructor: Type,
   protoProps: object,
   staticProps: object
-) {
+): Type {
   function defineProperties(target: object, props: Array<any>) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
