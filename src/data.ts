@@ -1,32 +1,29 @@
+// @ts-nocheck
 
+var cache = {},
+  guidCounter = 1,
+  expando = "data" + new Date().getTime();
 
-    var cache = {},
-        guidCounter = 1,
-        expando = "data" + (new Date()).getTime();
-    
-    function getData(elem) {
-      var guid = elem[expando];
-      if (!guid) {
-        guid = elem[expando] = guidCounter++;
-        cache[guid] = {}; 
-      }
-      return cache[guid];
+function getData(elem) {
+  var guid = elem[expando];
+  if (!guid) {
+    guid = elem[expando] = guidCounter++;
+    cache[guid] = {};
+  }
+  return cache[guid];
+}
+
+function removeData(elem) {
+  var guid = elem[expando];
+  if (!guid) return;
+  delete cache[guid];
+  try {
+    delete elem[expando];
+  } catch (e) {
+    if (elem.removeAttribute) {
+      elem.removeAttribute(expando);
     }
+  }
+}
 
-    function removeData(elem) {
-      var guid = elem[expando];
-      if (!guid) return;
-      delete cache[guid];
-      try {
-        delete elem[expando];
-      } catch (e) {
-        if (elem.removeAttribute) {
-          elem.removeAttribute(expando);
-        }
-      }
-    }
-
-export {
-  getData,
-  removeData
-};
+export { getData, removeData };
