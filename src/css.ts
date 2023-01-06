@@ -1,10 +1,8 @@
-// @ts-nocheck
+type MSCSSMatrix = DOMMatrix;
+declare var MSCSSMatrix: typeof DOMMatrix;
 
-declare var MSCSSMatrix;
-
-function addClass(element, className) {
+function addClass(element: HTMLElement, className: string) {
   if (hasClass(element, className)) return false;
-  var cssClass = element.className;
   if (element.classList) {
     element.classList.add(className);
   } else {
@@ -12,7 +10,7 @@ function addClass(element, className) {
   }
 }
 
-function isVisible(element) {
+function isVisible(element: HTMLElement) {
   return !(element.offsetHeight === 0 && element.offsetWidth === 0);
 }
 
@@ -22,7 +20,7 @@ function isOpacitySupported() {
   return div.style.opacity === "0.5";
 }
 
-function getOpacity(element) {
+function getOpacity(element: HTMLElement) {
   var defaultValue = 1.0;
   if (isOpacitySupported()) {
     return parseFloat(element.style.opacity) || defaultValue;
@@ -41,29 +39,35 @@ function getOpacity(element) {
 /**
  * Get the top and height value for hidden elements.
  */
-function getDimensions(element) {
+function getDimensions(element: HTMLElement) {
   var properties = {
     position: "absolute",
     visibility: "hidden",
     display: "block",
   };
 
-  var previous = {};
+  var previous: any = {};
   for (var prop in properties) {
-    previous[prop] = element.style[prop];
-    element.style[prop] = properties[prop];
+    if (properties.hasOwnProperty(prop)) {
+      previous[prop] = element.style[prop as keyof typeof properties];
+      element.style[prop as keyof typeof properties] =
+        properties[prop as keyof typeof properties];
+    }
   }
   var result = {
     width: element.offsetWidth,
     height: element.offsetHeight,
   };
   for (prop in properties) {
-    element.style[prop] = previous[prop];
+    if (properties.hasOwnProperty(prop)) {
+      element.style[prop as keyof typeof properties] =
+        previous[prop as keyof typeof properties];
+    }
   }
   return result;
 }
 
-function css(element, name, value?: any) {
+function css(element: HTMLElement, name: string, value?: any) {
   var translations = {
     float: ["cssFloat", "styleFloat"],
   };
@@ -71,14 +75,18 @@ function css(element, name, value?: any) {
     return letter.toUpperCase();
   });
 
-  if (translations[name]) {
+  if (translations.hasOwnProperty(name)) {
+    const val: string[] = translations[name as keyof typeof translations];
+    const v1 = val[0];
+    const cssStyle = element.style;
     name =
-      typeof element.style[translations[name][0]] !== "undefined"
-        ? translations[name][0]
-        : translations[name][1];
+      typeof cssStyle[v1 as keyof typeof cssStyle] !== "undefined"
+        ? val[0]
+        : val[1];
   }
 
   if (typeof value !== "undefined") {
+    // @ts-ignore
     element.style[name] = value;
   }
 
@@ -88,22 +96,17 @@ function css(element, name, value?: any) {
   return fetchComputedStyle(element, name);
 }
 
-function fetchComputedStyle(element, property) {
+function fetchComputedStyle(element: HTMLElement, property: string) {
   if (window.getComputedStyle) {
     var computedStyle = window.getComputedStyle(element);
     if (computedStyle) {
       property = property.replace(/([A-Z])/g, "-$1").toLowerCase();
       return computedStyle.getPropertyValue(property);
     }
-  } else if (element.currentStyle) {
-    property = property.replace(/-([a-z])/gi, function (all, letter) {
-      return letter.toUpperCase();
-    });
-    return element.currentStyle[property];
   }
 }
 
-function hasClass(element, className) {
+function hasClass(element: HTMLElement, className: string) {
   var originalClassName = element.className;
   if (!originalClassName) {
     return false;
@@ -129,28 +132,25 @@ function getWindowSize() {
   };
 }
 
-function width(element, newWidth) {
-  if (newWidth) {
+function width(element: HTMLElement | Window, newWidth: string) {
+  if (newWidth && "style" in element) {
     element.style.width = newWidth;
   } else {
     if (element === window) {
       var windowSize = getWindowSize();
       return windowSize.width;
     }
-    if (!isVisible(element)) {
-      return getDimensions(element).width;
+    if (!isVisible(element as HTMLElement)) {
+      return getDimensions(element as HTMLElement).width;
     }
     if (window.getComputedStyle) {
-      var style = window.getComputedStyle(element);
+      var style = window.getComputedStyle(element as HTMLElement);
       return style.getPropertyValue("width");
-    } else if (element.currentStyle) {
-      var currentWidth = element.currentStyle.width;
-      return currentWidth == "auto" ? element.offsetWidth : currentWidth;
     }
   }
 }
 
-function height(element, newHeight) {
+function height(element: HTMLElement, newHeight: string) {
   if (newHeight) {
     element.style.height = newHeight;
   } else {
@@ -160,21 +160,18 @@ function height(element, newHeight) {
     if (window.getComputedStyle) {
       var style = window.getComputedStyle(element);
       return style.getPropertyValue("height");
-    } else if (element.currentStyle) {
-      var currentHeight = element.currentStyle.height;
-      return currentHeight == "auto" ? element.offsetHeight : currentHeight;
     }
   }
 }
 
-function position(element) {
+function position(element: HTMLElement) {
   return {
     left: element.offsetLeft,
     top: element.offsetTop,
   };
 }
 
-function offset(element) {
+function offset(element: HTMLElement) {
   var box = element.getBoundingClientRect();
   var body = document.body;
   var docEl = document.documentElement;
@@ -198,12 +195,13 @@ function offset(element) {
  * Get the current coordinates of the element, relative to the document.
  * Note: Works on IE7+
  */
-function getOffset(elem) {
-  var current = elem.offsetParent,
+function getOffset(elem: HTMLElement) {
+  var current: any = elem.offsetParent,
     actualLeft = elem.offsetLeft,
     actualTop = elem.offsetTop;
 
-  while ((current = current.offsetParent)) {
+  while (current.offsetParent) {
+    current = current.offsetParent;
     actualLeft += current.offsetLeft;
     actualTop += current.offsetTop;
   }
@@ -214,23 +212,22 @@ function getOffset(elem) {
   };
 }
 
-function getTranslateXValue(domElement) {
+function getTranslateXValue(domElement: HTMLElement) {
   var val = getTranslateValue(domElement);
   return val.m41;
 }
 
-function getTranslateYValue(domElement) {
+function getTranslateYValue(domElement: HTMLElement) {
   var val = getTranslateValue(domElement);
   return val.m42;
 }
 
 /**
  * Return the CSS3 translate value of a DOM element.
- * Note: IE 9+
  * @param {Object} domElement : A native DOM element
  * @returns {mixed}
  */
-function getTranslateValue(domElement) {
+function getTranslateValue(domElement: HTMLElement) {
   var cssMatrixObject = null;
   if (typeof WebKitCSSMatrix !== "undefined") {
     cssMatrixObject = WebKitCSSMatrix;
@@ -268,8 +265,11 @@ function getTransitionEndEventName() {
     };
 
   for (i in transitions) {
-    if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
-      return transitions[i];
+    if (
+      transitions.hasOwnProperty(i) &&
+      el.style[i as keyof typeof el.style] !== undefined
+    ) {
+      return transitions[i as keyof typeof transitions];
     }
   }
   //TODO: throw 'TransitionEnd event is not supported in this browser';
@@ -291,8 +291,13 @@ function has3dTransforms() {
   document.body.insertBefore(el, null);
 
   for (var t in transforms) {
-    if (el.style[t] !== undefined) {
+    if (
+      transforms.hasOwnProperty(t) &&
+      el.style[t as keyof typeof el.style] !== undefined
+    ) {
+      // @ts-ignore
       el.style[t] = "translate3d(1px,1px,1px)";
+      // @ts-ignore
       has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
     }
   }
@@ -301,7 +306,7 @@ function has3dTransforms() {
   return has3d !== undefined && has3d.length > 0 && has3d !== "none";
 }
 
-function removeClass(element, className) {
+function removeClass(element: HTMLElement, className: string) {
   if (!element || !element.className) return false;
   if (element.classList) {
     element.classList.remove(className);
@@ -319,7 +324,7 @@ function removeClass(element, className) {
   }
 }
 
-function toggleClass(element, className) {
+function toggleClass(element: HTMLElement, className: string) {
   if (hasClass(element, className)) {
     removeClass(element, className);
   } else {

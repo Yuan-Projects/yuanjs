@@ -1,16 +1,6 @@
 import Deferred from "./deferred";
 import { encodeFormatData } from "./helper";
-import type {
-  AjaxOptions,
-  XDomainRequest as XDomainRequestInterface,
-} from "./types";
-
-// prettier-ignore
-declare var XDomainRequest: {
-  prototype: XDomainRequestInterface;
-  new(): XDomainRequestInterface;
-  create(): XDomainRequestInterface;
-}
+import type { AjaxOptions } from "./types";
 
 /**
  * Ajax request
@@ -19,7 +9,7 @@ declare var XDomainRequest: {
 
 function ajax(options: AjaxOptions) {
   var dtd = Deferred();
-  var xhr: any = getXHR(options.crossDomain);
+  var xhr: any = getXHR();
   var url = options.url;
   var type = options.type ? options.type.toUpperCase() : "GET";
   var isAsyc = !!options.asyc || true;
@@ -94,12 +84,8 @@ function ajax(options: AjaxOptions) {
     callBack();
   }
 
-  function getXHR(crossDomain: boolean) {
+  function getXHR() {
     var xhr = new XMLHttpRequest();
-    if (crossDomain && typeof XDomainRequest != "undefined") {
-      // @ts-ignore
-      xhr = new XDomainRequest();
-    }
     return xhr;
   }
 
