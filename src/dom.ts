@@ -1,12 +1,13 @@
-// @ts-nocheck
+import type { ElementWithLegacy } from "./types";
 import { css } from "./css";
+
 /**
  * DOM Manipulation
  *
  */
 
 // https://stackoverflow.com/questions/814564/inserting-html-elements-with-javascript/814649#814649
-function createDOMFromString(string) {
+function createDOMFromString(string: string): DocumentFragment {
   var frag = document.createDocumentFragment(),
     div = document.createElement("div");
   div.innerHTML = string;
@@ -16,11 +17,11 @@ function createDOMFromString(string) {
   return frag;
 }
 
-function isDOMNode(node) {
+function isDOMNode(node: any): boolean {
   return node && node.nodeType;
 }
 
-function after(element, content) {
+function after(element: HTMLElement, content: any): void {
   // insertAdjacentHTML method is useful but has many problems, so we don't use it here.
   // See https://github.com/jquery/jquery/pull/1200
   var newElement = null;
@@ -29,49 +30,49 @@ function after(element, content) {
   } else if (isDOMNode(content)) {
     newElement = content;
   }
-  if (!newElement) return false;
+  if (!newElement) return;
   element.parentNode.insertBefore(newElement, element.nextSibling);
 }
 
-function append(element, content) {
+function append(element: HTMLElement, content: any): void {
   var newElement = null;
   if (typeof content === "string") {
     newElement = createDOMFromString(content);
   } else if (isDOMNode(content)) {
     newElement = content;
   }
-  if (!newElement) return false;
+  if (!newElement) return;
   element.appendChild(newElement);
 }
 
-function before(element, content) {
+function before(element: HTMLElement, content: any): void {
   var newElement = null;
   if (typeof content === "string") {
     newElement = createDOMFromString(content);
   } else if (isDOMNode(content)) {
     newElement = content;
   }
-  if (!newElement) return false;
+  if (!newElement) return;
   element.parentNode.insertBefore(newElement, element);
 }
 
-function children(element) {
+function children(element: HTMLElement): HTMLCollection {
   // Note: Internet Explorer 6, 7 and 8 supported it, but erroneously includes Comment nodes.
   return element.children;
 }
 
-function clone(element) {
+function clone(element: Element): Node {
   return element.cloneNode(true);
 }
 
-function html(element, domString) {
+function html(element: Element, domString: string): string {
   if (domString) {
     element.innerHTML = domString;
   }
   return element.innerHTML;
 }
 
-function id() {
+function id(): Array<HTMLElement> {
   var argLength = arguments.length;
   if (argLength === 0) throw Error("No id name provided.");
   var result = [];
@@ -84,7 +85,7 @@ function id() {
   return argLength > 1 ? result : result[0];
 }
 
-function tag(tagName) {
+function tag(tagName: string): HTMLCollection | Array<Element> {
   var newArr;
   var allElements = document.getElementsByTagName(tagName);
   if (tagName === "*") {
@@ -98,7 +99,10 @@ function tag(tagName) {
   return newArr ? newArr : allElements;
 }
 
-function cssClass(classname, parentNode) {
+function cssClass(
+  classname: string,
+  parentNode: Document | Element
+): HTMLCollection | Array<Element> | NodeList {
   parentNode = parentNode || document;
   if (document.getElementsByClassName)
     return parentNode.getElementsByClassName(classname);
@@ -130,16 +134,19 @@ function cssClass(classname, parentNode) {
   return nodes;
 }
 
-function empty(element) {
+function empty(element: Element): void {
   element.innerHTML = "";
 }
 
-function filterNode(domList, filterCondition) {
+function filterNode<Type>(
+  domList: Array<Type>,
+  filterCondition: any
+): Array<Type> {
   var filterFn: any = function () {
     return false;
   };
   if (typeof filterCondition === "string") {
-    filterFn = function (element) {
+    filterFn = function (element: ElementWithLegacy) {
       return matchesSelector(element, filterCondition);
     };
   } else if (typeof filterCondition === "function") {
@@ -148,11 +155,14 @@ function filterNode(domList, filterCondition) {
   return Array.prototype.filter.call(domList, filterFn);
 }
 
-function findNode(parentNode, selector) {
+function findNode(
+  parentNode: Document | Element | DocumentFragment,
+  selector: string
+): NodeList {
   return parentNode.querySelectorAll(selector);
 }
 
-function matchesSelector(element, selector) {
+function matchesSelector(element: ElementWithLegacy, selector: string) {
   if (element.matches) {
     return element.matches(selector);
   } else if (element.matchesSelector) {
@@ -168,7 +178,7 @@ function matchesSelector(element, selector) {
   }
 }
 
-function contains(parentNode, childNode) {
+function contains(parentNode: Node, childNode: Node): boolean {
   if (parentNode.compareDocumentPosition) {
     return !!(parentNode.compareDocumentPosition(childNode) & 16);
   } else if (typeof parentNode.contains === "function") {
@@ -185,37 +195,37 @@ function contains(parentNode, childNode) {
   }
 }
 
-function offsetParent(element) {
-  var parent = element.offsetParent;
+function offsetParent(element: HTMLElement): HTMLElement {
+  var parent = element.offsetParent as HTMLElement;
   while (parent && css(parent, "position") === "static") {
-    parent = parent.offsetParent;
+    parent = parent.offsetParent as HTMLElement;
   }
   return parent || document.body;
 }
 
-function parent(element) {
+function parent(element: Node): Node | null {
   var parentNode = element.parentNode;
   return parentNode && parentNode.nodeType !== 11 ? parentNode : null;
 }
 
-function prepend(parentNode, content) {
+function prepend(parentNode: HTMLElement, content: string | Node): void {
   var newElement = null;
   if (typeof content === "string") {
     newElement = createDOMFromString(content);
   } else if (isDOMNode(content)) {
     newElement = content;
   }
-  if (!newElement) return false;
+  if (!newElement) return;
   parentNode.insertBefore(newElement, parentNode.firstChild);
 }
 
-function remove(element) {
+function remove(element: HTMLElement): void {
   if (element.parentNode) {
     element.parentNode.removeChild(element);
   }
 }
 
-function siblings(element) {
+function siblings(element: HTMLElement): Array<Node> {
   var arr = [];
   var parent = element.parentNode;
   var node = parent.firstChild;
@@ -228,7 +238,8 @@ function siblings(element) {
   return arr;
 }
 
-function text(element, newText) {
+function text(element: HTMLElement): string;
+function text(element: HTMLElement, newText?: string) {
   if (newText === undefined) {
     return typeof element.textContent === "string"
       ? element.textContent

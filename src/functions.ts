@@ -1,6 +1,4 @@
-// @ts-nocheck
-
-function bind(func, context) {
+function bind(func: Function, context: any) {
   var slice = Array.prototype.slice;
   var args = slice.call(arguments, 2);
   return function () {

@@ -1,10 +1,8 @@
-// @ts-nocheck
-
-var cache = {},
+var cache: any = {},
   guidCounter = 1,
   expando = "data" + new Date().getTime();
 
-function getData(elem) {
+function getData(elem: any) {
   var guid = elem[expando];
   if (!guid) {
     guid = elem[expando] = guidCounter++;
@@ -13,7 +11,7 @@ function getData(elem) {
   return cache[guid];
 }
 
-function removeData(elem) {
+function removeData(elem: any) {
   var guid = elem[expando];
   if (!guid) return;
   delete cache[guid];

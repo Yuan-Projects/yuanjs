@@ -1,3 +1,9 @@
+export interface ElementWithLegacy extends Element {
+  msMatchesSelector(selectors: string): boolean;
+  matchesSelector(selectors: string): boolean;
+  mozMatchesSelector(selectors: string): boolean;
+}
+
 export interface AjaxOptions {
   url: string;
   crossDomain: boolean;

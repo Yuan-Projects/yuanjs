@@ -1,9 +1,7 @@
-// @ts-nocheck
-
 // Events on and off
-var Events = {};
+var Events: any = {};
 
-function on(event, callback) {
+function on(event: string, callback: Function): Function {
   if (!Events[event]) {
     Events[event] = [];
   }
@@ -11,7 +9,7 @@ function on(event, callback) {
   return callback;
 }
 
-function off(event, callback) {
+function off(event: string, callback: Function): void {
   if (!Events[event]) {
     return;
   }
@@ -25,7 +23,7 @@ function off(event, callback) {
   }
 }
 
-function trigger(event) {
+function trigger(event: string): void {
   if (!Events[event]) {
     return;
   }

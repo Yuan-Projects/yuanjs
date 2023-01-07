@@ -1,8 +1,6 @@
-// @ts-nocheck
-
 import { getData, removeData } from "./data";
 
-function fixEvent(event) {
+function fixEvent(event: any): object {
   // Predefines often-used functions
   function returnTrue() {
     return true;
@@ -84,7 +82,7 @@ function fixEvent(event) {
 // DOM Events
 
 var nextGuid = 1;
-function addEvent(elem, type, fn) {
+function addEvent(elem: HTMLElement, type: any, fn: any): void {
   var data = getData(elem);
   if (!data.handlers) {
     data.handlers = {};
@@ -99,7 +97,7 @@ function addEvent(elem, type, fn) {
 
   if (!data.dispatcher) {
     data.disabled = false;
-    data.dispatcher = function (event) {
+    data.dispatcher = function (event: any) {
       if (data.disabled) return;
       event = fixEvent(event);
       var handlers = data.handlers[event.type];
@@ -114,16 +112,14 @@ function addEvent(elem, type, fn) {
   if (data.handlers[type].length == 1) {
     if (document.addEventListener) {
       elem.addEventListener(type, data.dispatcher, false);
-    } else if (document["attachEvent"]) {
-      elem.attachEvent("on" + type, data.dispatcher);
     }
   }
 }
 
-function removeEvent(elem, type, fn) {
+function removeEvent(elem: HTMLElement, type: any, fn: any) {
   var data = getData(elem);
   if (!data.handlers) return;
-  var removeType = function (t) {
+  var removeType = function (t: any) {
     data.handlers[t] = [];
     tidyUp(elem, t);
   };
@@ -152,9 +148,9 @@ function removeEvent(elem, type, fn) {
   tidyUp(elem, type);
 }
 
-function triggerEvent(elem, event) {
+function triggerEvent(elem: HTMLElement, event: any) {
   var elemData = getData(elem),
-    parent = elem.parentNode || elem.ownerDocument;
+    parent = (elem.parentNode || elem.ownerDocument) as HTMLElement;
 
   if (typeof event === "string") {
     event = { type: event, target: elem };
@@ -177,8 +173,8 @@ function triggerEvent(elem, event) {
   }
 }
 
-function tidyUp(elem, type) {
-  function isEmpty(obj) {
+function tidyUp(elem: HTMLElement, type: string) {
+  function isEmpty(obj: object) {
     for (var prop in obj) {
       return false;
     }
@@ -192,8 +188,6 @@ function tidyUp(elem, type) {
 
     if (document.removeEventListener) {
       elem.removeEventListener(type, data.dispatcher, false);
-    } else if (document["detachEvent"]) {
-      elem.detachEvent("on" + type, data.dispatcher);
     }
   }
 
@@ -215,7 +209,7 @@ const documentReady = (function () {
   // if you want to put them in a different namespace
   //funcName = funcName || "docReady";
   //baseObj = baseObj || window;
-  var readyList = [];
+  var readyList: any = [];
   var readyFired = false;
   var readyEventHandlersInstalled = false;
 
@@ -249,7 +243,7 @@ const documentReady = (function () {
   // docReady(fn, context);
   // the context argument is optional - if present, it will be passed
   // as an argument to the callback
-  return function (callback, context) {
+  return function (callback: Function, context: any) {
     // if ready has already fired, then just schedule the callback
     // to fire asynchronously, but right away
     if (readyFired) {
@@ -272,11 +266,6 @@ const documentReady = (function () {
         // backup is window load event
         window.addEventListener("load", ready, false);
       } else {
-        if ("attachEvent" in document && "attachEvent" in document) {
-          // must be IE
-          //document.attachEvent("onreadystatechange", readyStateChange);
-          //window.attachEvent("onload", ready);
-        }
       }
       readyEventHandlersInstalled = true;
     }
