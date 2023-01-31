@@ -1,3 +1,6 @@
+'use strict';
+
+// @ts-nocheck
 /**
  * Deferred Object
  */
@@ -17,10 +20,10 @@ function Deferred() {
         });
     }
     return {
-        resolve: function (...args) {
+        resolve: function () {
             resolveInternal("ok", arguments);
         },
-        reject: function (...args) {
+        reject: function () {
             resolveInternal("fail", arguments);
         },
         promise: function () {
@@ -46,13 +49,14 @@ function Deferred() {
                 },
                 then: function (done, error) {
                     return this.done(done).fail(error);
-                }
+                },
             };
             return self;
-        }
+        },
     };
 }
 
+// @ts-nocheck
 /**
  * Set Class: similar to ES2015 Set
  *
@@ -155,14 +159,18 @@ function encodeFormatData(data) {
     if (typeof data === "string")
         return data;
     var pairs = []; // To hold name=value pairs
-    for (var name in data) { // For each name
+    for (var name in data) {
+        // For each name
         if (!data.hasOwnProperty(name))
             continue; // Skip inherited
         if (typeof data[name] === "function")
             continue; // Skip methods
-        if (Object.prototype.toString.call(data[name]) === "[object Array]") {
+        if (Object.prototype.toString.call(data[name]) ===
+            "[object Array]") {
             for (var i = 0, len = data[name].length; i < len; i++) {
-                pairs.push(encodeURIComponent(name) + "[]=" + encodeURIComponent(data[name][i].toString()));
+                pairs.push(encodeURIComponent(name) +
+                    "[]=" +
+                    encodeURIComponent(data[name][i].toString()));
             }
             continue;
         }
@@ -171,31 +179,32 @@ function encodeFormatData(data) {
         value = encodeURIComponent(value); // Encode value
         pairs.push(name + "=" + value); // Remember name=value pair
     }
-    return pairs.join('&'); // Return joined pairs separated with &
+    return pairs.join("&"); // Return joined pairs separated with &
 }
 function trim(str) {
     if (String.prototype.trim) {
         return str.trim();
     }
     else {
-        return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
     }
 }
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys
 if (!Object.keys) {
     Object.keys = (function () {
-        var hasOwnProperty = Object.prototype.hasOwnProperty, hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'), dontEnums = [
-            'toString',
-            'toLocaleString',
-            'valueOf',
-            'hasOwnProperty',
-            'isPrototypeOf',
-            'propertyIsEnumerable',
-            'constructor'
+        var hasOwnProperty = Object.prototype.hasOwnProperty, hasDontEnumBug = !{ toString: null }.propertyIsEnumerable("toString"), dontEnums = [
+            "toString",
+            "toLocaleString",
+            "valueOf",
+            "hasOwnProperty",
+            "isPrototypeOf",
+            "propertyIsEnumerable",
+            "constructor",
         ], dontEnumsLength = dontEnums.length;
         return function (obj) {
-            if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
-                throw new TypeError('Object.keys called on non-object');
+            if (typeof obj !== "object" &&
+                (typeof obj !== "function" || obj === null)) {
+                throw new TypeError("Object.keys called on non-object");
             }
             var result = [], prop, i;
             for (prop in obj) {
@@ -212,7 +221,7 @@ if (!Object.keys) {
             }
             return result;
         };
-    }());
+    })();
 }
 /**
  * Determine whether the argument is an array.
@@ -267,7 +276,7 @@ function isString(param) {
  * @returns {Boolean}
  */
 function isFunction(param) {
-    return Object.prototype.toString.call(param) === '[object Function]';
+    return Object.prototype.toString.call(param) === "[object Function]";
 }
 function isNumeric(obj) {
     return !isNaN(parseFloat(obj)) && isFinite(obj);
@@ -315,8 +324,9 @@ function urlArgs(queryString) {
     };
     var query = queryString.substring(1); // Get query string, minus '?'
     var pairs = query.split("&"); // Split at ampersands
-    for (var i = 0; i < pairs.length; i++) { // For each fragment
-        var pos = pairs[i].indexOf('='); // Look for "name=value"
+    for (var i = 0; i < pairs.length; i++) {
+        // For each fragment
+        var pos = pairs[i].indexOf("="); // Look for "name=value"
         if (pos == -1)
             continue; // If not found, skip it
         var name = pairs[i].substring(0, pos); // Extract the name
@@ -336,7 +346,7 @@ function isInteger(value) {
     if (Number.isInteger) {
         return Number.isInteger(value);
     }
-    return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
+    return (typeof value === "number" && isFinite(value) && Math.floor(value) === value);
 }
 // A function for defining simple classes.
 function createClass(Constructor, protoProps, staticProps) {
@@ -358,18 +368,18 @@ function createClass(Constructor, protoProps, staticProps) {
                 continue;
             arr.push({
                 key: prop,
-                value: obj[prop]
+                value: obj[prop],
             });
         }
         return arr;
     }
     if (protoProps) {
-        protoProps = objectToArray(protoProps);
-        defineProperties(Constructor.prototype, protoProps);
+        var props = objectToArray(protoProps);
+        defineProperties(Constructor.prototype, props);
     }
     if (staticProps) {
-        staticProps = objectToArray(staticProps);
-        defineProperties(Constructor, staticProps);
+        var props = objectToArray(staticProps);
+        defineProperties(Constructor, props);
     }
     return Constructor;
 }
@@ -380,7 +390,7 @@ function createClass(Constructor, protoProps, staticProps) {
  */
 function ajax(options) {
     var dtd = Deferred();
-    var xhr = getXHR(options.crossDomain);
+    var xhr = getXHR();
     var url = options.url;
     var type = options.type ? options.type.toUpperCase() : "GET";
     var isAsyc = !!options.asyc || true;
@@ -390,9 +400,13 @@ function ajax(options) {
     var data = options.data ? encodeFormatData(options.data) : "";
     var dataType = options.dataType || "text";
     var contentType = options.contentType || "application/x-www-form-urlencoded";
-    var timeout = (options.timeout && !isNaN(options.timeout) && options.timeout > 0) ? options.timeout : 0;
+    var timeout = options.timeout && !isNaN(options.timeout) && options.timeout > 0
+        ? options.timeout
+        : 0;
     var timedout = false;
-    var headers = Object.prototype.toString.call(options.headers) === "[object Object]" ? options.headers : null;
+    var headers = Object.prototype.toString.call(options.headers) === "[object Object]"
+        ? options.headers
+        : null;
     if (timeout) {
         var timer = setTimeout(function () {
             timedout = true;
@@ -417,7 +431,7 @@ function ajax(options) {
             xhr.onload = callBack;
             xhr.onerror = function () {
                 if (errorCallBack) {
-                    errorCallBack(xhr);
+                    errorCallBack("error", xhr);
                 }
                 dtd.reject(xhr);
             };
@@ -426,9 +440,11 @@ function ajax(options) {
     if (xhr.setRequestHeader) {
         xhr.setRequestHeader("Content-Type", contentType);
     }
-    if (headers && xhr.setRequestHeader) { // No custom headers may be added to the request in the XDomainRequest object
+    if (headers && xhr.setRequestHeader) {
+        // No custom headers may be added to the request in the XDomainRequest object
         for (var prop in headers) {
             if (headers.hasOwnProperty(prop)) {
+                // @ts-ignore
                 xhr.setRequestHeader(prop, headers[prop]);
             }
         }
@@ -443,11 +459,8 @@ function ajax(options) {
     if (!isAsyc) {
         callBack();
     }
-    function getXHR(crossDomain) {
+    function getXHR() {
         var xhr = new XMLHttpRequest();
-        if (crossDomain && typeof XDomainRequest != "undefined") {
-            xhr = new XDomainRequest();
-        }
         return xhr;
     }
     function callBack() {
@@ -464,10 +477,11 @@ function ajax(options) {
         // Determine if successful
         if ("status" in xhr) {
             var status = xhr.status;
-            var isSuccess = status >= 200 && status < 300 || status === 304;
+            var isSuccess = (status >= 200 && status < 300) || status === 304;
             if (isSuccess) {
                 var resultType = xhr.getResponseHeader("Content-Type");
-                if (dataType === "xml" || (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)) {
+                if (dataType === "xml" ||
+                    (resultType && resultType.indexOf("xml") !== -1 && xhr.responseXML)) {
                     if (successCallBack) {
                         successCallBack(resultXML, xhr);
                     }
@@ -491,7 +505,8 @@ function ajax(options) {
                 dtd.reject(xhr);
             }
         }
-        else { // XDomainRequest
+        else {
+            // XDomainRequest
             if (dataType === "xml" || xhr.responseXML) {
                 if (successCallBack) {
                     successCallBack(resultXML, xhr);
@@ -514,8 +529,10 @@ function ajax(options) {
 }
 // Inspired by jQuery
 function loadScript(src, successCallback, errorCallback) {
-    var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
-    var script = document.createElement('script');
+    var head = document.head ||
+        document.getElementsByTagName("head")[0] ||
+        document.documentElement;
+    var script = document.createElement("script");
     script.type = "text/javascript";
     script.src = src;
     script.async = true;
@@ -532,7 +549,7 @@ function loadScript(src, successCallback, errorCallback) {
             }
             // Dereference the script
             script = null;
-            // Callback 
+            // Callback
             successCallback();
         }
     };
@@ -549,12 +566,11 @@ function loadScript(src, successCallback, errorCallback) {
 function addClass(element, className) {
     if (hasClass(element, className))
         return false;
-    element.className;
     if (element.classList) {
         element.classList.add(className);
     }
     else {
-        element.className += ' ' + className;
+        element.className += " " + className;
     }
 }
 function isVisible(element) {
@@ -588,33 +604,46 @@ function getDimensions(element) {
     var properties = {
         position: "absolute",
         visibility: "hidden",
-        display: "block"
+        display: "block",
     };
     var previous = {};
     for (var prop in properties) {
-        previous[prop] = element.style[prop];
-        element.style[prop] = properties[prop];
+        if (properties.hasOwnProperty(prop)) {
+            previous[prop] = element.style[prop];
+            element.style[prop] =
+                properties[prop];
+        }
     }
     var result = {
         width: element.offsetWidth,
-        height: element.offsetHeight
+        height: element.offsetHeight,
     };
     for (prop in properties) {
-        element.style[prop] = previous[prop];
+        if (properties.hasOwnProperty(prop)) {
+            element.style[prop] =
+                previous[prop];
+        }
     }
     return result;
 }
 function css(element, name, value) {
     var translations = {
-        "float": ["cssFloat", "styleFloat"]
+        float: ["cssFloat", "styleFloat"],
     };
-    name = name.replace(/-([a-z])/ig, function (all, letter) {
+    name = name.replace(/-([a-z])/gi, function (all, letter) {
         return letter.toUpperCase();
     });
-    if (translations[name]) {
-        name = typeof element.style[translations[name][0]] !== "undefined" ? translations[name][0] : translations[name][1];
+    if (translations.hasOwnProperty(name)) {
+        var val = translations[name];
+        var v1 = val[0];
+        var cssStyle = element.style;
+        name =
+            typeof cssStyle[v1] !== "undefined"
+                ? val[0]
+                : val[1];
     }
     if (typeof value !== "undefined") {
+        // @ts-ignore
         element.style[name] = value;
     }
     if (name === "opacity") {
@@ -626,13 +655,9 @@ function fetchComputedStyle(element, property) {
     if (window.getComputedStyle) {
         var computedStyle = window.getComputedStyle(element);
         if (computedStyle) {
-            property = property.replace(/([A-Z])/g, '-$1').toLowerCase();
+            property = property.replace(/([A-Z])/g, "-$1").toLowerCase();
             return computedStyle.getPropertyValue(property);
         }
-    }
-    else if (element.currentStyle) {
-        property = property.replace(/-([a-z])/ig, function (all, letter) { return letter.toUpperCase(); });
-        return element.currentStyle[property];
     }
 }
 function hasClass(element, className) {
@@ -656,11 +681,11 @@ function getWindowSize() {
     }
     return {
         width: pageWidth,
-        height: pageHeight
+        height: pageHeight,
     };
 }
 function width(element, newWidth) {
-    if (newWidth) {
+    if (newWidth && "style" in element) {
         element.style.width = newWidth;
     }
     else {
@@ -674,10 +699,6 @@ function width(element, newWidth) {
         if (window.getComputedStyle) {
             var style = window.getComputedStyle(element);
             return style.getPropertyValue("width");
-        }
-        else if (element.currentStyle) {
-            var currentWidth = element.currentStyle.width;
-            return currentWidth == "auto" ? element.offsetWidth : currentWidth;
         }
     }
 }
@@ -693,16 +714,12 @@ function height(element, newHeight) {
             var style = window.getComputedStyle(element);
             return style.getPropertyValue("height");
         }
-        else if (element.currentStyle) {
-            var currentHeight = element.currentStyle.height;
-            return currentHeight == "auto" ? element.offsetHeight : currentHeight;
-        }
     }
 }
 function position(element) {
     return {
-        "left": element.offsetLeft,
-        "top": element.offsetTop
+        left: element.offsetLeft,
+        top: element.offsetTop,
     };
 }
 function offset(element) {
@@ -716,8 +733,8 @@ function offset(element) {
     var top = box.top + scrollTop - clientTop;
     var left = box.left + scrollLeft - clientLeft;
     return {
-        "top": Math.round(top),
-        "left": Math.round(left)
+        top: Math.round(top),
+        left: Math.round(left),
     };
 }
 /**
@@ -726,13 +743,14 @@ function offset(element) {
  */
 function getOffset(elem) {
     var current = elem.offsetParent, actualLeft = elem.offsetLeft, actualTop = elem.offsetTop;
-    while ((current = current.offsetParent)) {
+    while (current.offsetParent) {
+        current = current.offsetParent;
         actualLeft += current.offsetLeft;
         actualTop += current.offsetTop;
     }
     return {
         left: actualLeft,
-        top: actualTop
+        top: actualTop,
     };
 }
 function getTranslateXValue(domElement) {
@@ -745,7 +763,6 @@ function getTranslateYValue(domElement) {
 }
 /**
  * Return the CSS3 translate value of a DOM element.
- * Note: IE 9+
  * @param {Object} domElement : A native DOM element
  * @returns {mixed}
  */
@@ -761,15 +778,15 @@ function getTranslateValue(domElement) {
         cssMatrixObject = DOMMatrix;
     }
     var style = window.getComputedStyle(domElement);
-    var matrixString = '';
+    var matrixString = "";
     if (typeof style.webkitTransform !== "undefined") {
         matrixString = style.webkitTransform;
         //} else if (typeof style.mozTransform !== "undefined") {
     }
-    else if ('mozTransform' in style) {
+    else if ("mozTransform" in style) {
         matrixString = style.mozTransform;
     }
-    else if ('msTransform' in style) {
+    else if ("msTransform" in style) {
         matrixString = style.msTransform;
     }
     else if (typeof style.transform !== "undefined") {
@@ -778,38 +795,42 @@ function getTranslateValue(domElement) {
     return new cssMatrixObject(matrixString);
 }
 function getTransitionEndEventName() {
-    var i, el = document.createElement('div'), transitions = {
-        'WebkitTransition': 'webkitTransitionEnd',
-        'transition': 'transitionend',
-        'OTransition': 'otransitionend',
-        'MozTransition': 'transitionend'
+    var i, el = document.createElement("div"), transitions = {
+        WebkitTransition: "webkitTransitionEnd",
+        transition: "transitionend",
+        OTransition: "otransitionend",
+        MozTransition: "transitionend",
     };
     for (i in transitions) {
-        if (transitions.hasOwnProperty(i) && el.style[i] !== undefined) {
+        if (transitions.hasOwnProperty(i) &&
+            el.style[i] !== undefined) {
             return transitions[i];
         }
     }
     //TODO: throw 'TransitionEnd event is not supported in this browser';
-    return '';
+    return "";
 }
 function has3dTransforms() {
-    var el = document.createElement('p'), has3d, transforms = {
-        'webkitTransform': '-webkit-transform',
-        'OTransform': '-o-transform',
-        'msTransform': '-ms-transform',
-        'MozTransform': '-moz-transform',
-        'transform': 'transform'
+    var el = document.createElement("p"), has3d, transforms = {
+        webkitTransform: "-webkit-transform",
+        OTransform: "-o-transform",
+        msTransform: "-ms-transform",
+        MozTransform: "-moz-transform",
+        transform: "transform",
     };
     // Add it to the body to get the computed style
     document.body.insertBefore(el, null);
     for (var t in transforms) {
-        if (el.style[t] !== undefined) {
-            el.style[t] = 'translate3d(1px,1px,1px)';
+        if (transforms.hasOwnProperty(t) &&
+            el.style[t] !== undefined) {
+            // @ts-ignore
+            el.style[t] = "translate3d(1px,1px,1px)";
+            // @ts-ignore
             has3d = window.getComputedStyle(el).getPropertyValue(transforms[t]);
         }
     }
     document.body.removeChild(el);
-    return (has3d !== undefined && has3d.length > 0 && has3d !== "none");
+    return has3d !== undefined && has3d.length > 0 && has3d !== "none";
 }
 function removeClass(element, className) {
     if (!element || !element.className)
@@ -818,9 +839,12 @@ function removeClass(element, className) {
         element.classList.remove(className);
     }
     else {
-        var newClassName = element.className.split(/\s+/g).filter(function (cls) {
+        var newClassName = element.className
+            .split(/\s+/g)
+            .filter(function (cls) {
             return cls !== className;
-        }).join(' ');
+        })
+            .join(" ");
         if (newClassName !== element.className) {
             element.className = newClassName;
         }
@@ -841,7 +865,7 @@ function toggleClass(element, className) {
  */
 // https://stackoverflow.com/questions/814564/inserting-html-elements-with-javascript/814649#814649
 function createDOMFromString(string) {
-    var frag = document.createDocumentFragment(), div = document.createElement('div');
+    var frag = document.createDocumentFragment(), div = document.createElement("div");
     div.innerHTML = string;
     while (div.firstChild) {
         frag.appendChild(div.firstChild);
@@ -862,7 +886,7 @@ function after(element, content) {
         newElement = content;
     }
     if (!newElement)
-        return false;
+        return;
     element.parentNode.insertBefore(newElement, element.nextSibling);
 }
 function append(element, content) {
@@ -874,7 +898,7 @@ function append(element, content) {
         newElement = content;
     }
     if (!newElement)
-        return false;
+        return;
     element.appendChild(newElement);
 }
 function before(element, content) {
@@ -886,7 +910,7 @@ function before(element, content) {
         newElement = content;
     }
     if (!newElement)
-        return false;
+        return;
     element.parentNode.insertBefore(newElement, element);
 }
 function children(element) {
@@ -905,7 +929,7 @@ function html(element, domString) {
 function id() {
     var argLength = arguments.length;
     if (argLength === 0)
-        throw Error('No id name provided.');
+        throw Error("No id name provided.");
     var result = [];
     for (var i = 0; i < argLength; i++) {
         var thisArg = arguments[i];
@@ -959,10 +983,12 @@ function cssClass(classname, parentNode) {
     return nodes;
 }
 function empty(element) {
-    element.innerHTML = '';
+    element.innerHTML = "";
 }
 function filterNode(domList, filterCondition) {
-    var filterFn = function () { return false; };
+    var filterFn = function () {
+        return false;
+    };
     if (typeof filterCondition === "string") {
         filterFn = function (element) {
             return matchesSelector(element, filterCondition);
@@ -1034,7 +1060,7 @@ function prepend(parentNode, content) {
         newElement = content;
     }
     if (!newElement)
-        return false;
+        return;
     parentNode.insertBefore(newElement, parentNode.firstChild);
 }
 function remove(element) {
@@ -1056,7 +1082,9 @@ function siblings(element) {
 }
 function text(element, newText) {
     if (newText === undefined) {
-        return (typeof element.textContent === "string") ? element.textContent : element.innerText;
+        return typeof element.textContent === "string"
+            ? element.textContent
+            : element.innerText;
     }
     else if (typeof newText === "string") {
         if (typeof element.textContent === "string") {
@@ -1067,8 +1095,8 @@ function text(element, newText) {
         }
     }
 }
-const filter = filterNode;
-const find = findNode;
+var filter = filterNode;
+var find = findNode;
 
 // Events on and off
 var Events = {};
@@ -1113,7 +1141,7 @@ function bind(func, context) {
     };
 }
 
-var cache = {}, guidCounter = 1, expando = "data" + (new Date()).getTime();
+var cache = {}, guidCounter = 1, expando = "data" + new Date().getTime();
 function getData(elem) {
     var guid = elem[expando];
     if (!guid) {
@@ -1139,8 +1167,12 @@ function removeData(elem) {
 
 function fixEvent(event) {
     // Predefines often-used functions
-    function returnTrue() { return true; }
-    function returnFalse() { return false; }
+    function returnTrue() {
+        return true;
+    }
+    function returnFalse() {
+        return false;
+    }
     // Tests if fixing up is needed
     if (!event || !event.stopPropagation) {
         var old = event || window.event;
@@ -1149,12 +1181,13 @@ function fixEvent(event) {
         for (var prop in old) {
             event[prop] = old[prop];
         }
-        // The event occurrecd on this element 
+        // The event occurrecd on this element
         if (!event.target) {
             event.target = event.srcElement || document;
         }
         // Handle which other element the event is related to
-        event.relatedTarget = event.fromElement === event.target ? event.toElement : event.fromElement;
+        event.relatedTarget =
+            event.fromElement === event.target ? event.toElement : event.fromElement;
         // Stop the default browser action
         event.preventDefault = function () {
             event.returnValue = false;
@@ -1176,15 +1209,22 @@ function fixEvent(event) {
         // Handle mouse position
         if (event.clientX !== null) {
             var doc = document.documentElement, body = document.body;
-            event.pageX = event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-            event.pageY = event.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
+            event.pageX =
+                event.clientX +
+                    ((doc && doc.scrollLeft) || (body && body.scrollLeft) || 0) -
+                    ((doc && doc.clientLeft) || (body && body.clientLeft) || 0);
+            event.pageY =
+                event.clientY +
+                    ((doc && doc.scrollTop) || (body && body.scrollTop) || 0) -
+                    ((doc && doc.clientTop) || (body && body.clientTop) || 0);
         }
         // Handle  key presses
         event.which = event.charCode || event.keyCode;
         // Fix button for mouse clicks:
         // 0 == left; 1 == middle; 2 == right
         if (event.button !== null) {
-            event.button = (event.button & 1 ? 0 : (event.button & 4 ? 1 : (event.button & 2 ? 2 : 0)));
+            event.button =
+                event.button & 1 ? 0 : event.button & 4 ? 1 : event.button & 2 ? 2 : 0;
         }
     }
     return event;
@@ -1221,9 +1261,6 @@ function addEvent(elem, type, fn) {
         if (document.addEventListener) {
             elem.addEventListener(type, data.dispatcher, false);
         }
-        else if (document['attachEvent']) {
-            elem.attachEvent("on" + type, data.dispatcher);
-        }
     }
 }
 function removeEvent(elem, type, fn) {
@@ -1257,7 +1294,7 @@ function removeEvent(elem, type, fn) {
     tidyUp(elem, type);
 }
 function triggerEvent(elem, event) {
-    var elemData = getData(elem), parent = elem.parentNode || elem.ownerDocument;
+    var elemData = getData(elem), parent = (elem.parentNode || elem.ownerDocument);
     if (typeof event === "string") {
         event = { type: event, target: elem };
     }
@@ -1290,9 +1327,6 @@ function tidyUp(elem, type) {
         if (document.removeEventListener) {
             elem.removeEventListener(type, data.dispatcher, false);
         }
-        else if (document['detachEvent']) {
-            elem.detachEvent("on" + type, data.dispatcher);
-        }
     }
     if (isEmpty(data.handlers)) {
         delete data.handlers;
@@ -1304,7 +1338,7 @@ function tidyUp(elem, type) {
 }
 // Document ready event.
 // http://stackoverflow.com/a/9899701
-const documentReady = (function () {
+var documentReady = (function () {
     // The public function name defaults to window.docReady
     // but you can pass in your own object and own function name and those will be used
     // if you want to put them in a different namespace
@@ -1340,7 +1374,9 @@ const documentReady = (function () {
         // if ready has already fired, then just schedule the callback
         // to fire asynchronously, but right away
         if (readyFired) {
-            setTimeout(function () { callback(context); }, 1);
+            setTimeout(function () {
+                callback(context);
+            }, 1);
             return;
         }
         else {
@@ -1364,6 +1400,67 @@ const documentReady = (function () {
     };
 })();
 
-const version = "0.1.0";
+var version = "0.1.0";
 
-export { Deferred, YuanSet as Set, addClass, addEvent, after, ajax, append, before, bind, children, clone, contains, createClass, css, cssClass, documentReady, empty, encodeFormatData, filter, find, getOffset, getTransitionEndEventName, getTranslateXValue, getTranslateYValue, has3dTransforms, hasClass, height, html, id, inArray, isArray, isEmpty, isEmptyObject, isFunction, isInteger, isNumber, isNumeric, isString, isUndefined, loadScript, matchesSelector, off, offset, offsetParent, on, parent, position, prepend, remove, removeClass, removeEvent, replaceAll, siblings, tag, text, toggleClass, trigger, triggerEvent, trim, urlArgs, version, width };
+exports.Deferred = Deferred;
+exports.Set = YuanSet;
+exports.addClass = addClass;
+exports.addEvent = addEvent;
+exports.after = after;
+exports.ajax = ajax;
+exports.append = append;
+exports.before = before;
+exports.bind = bind;
+exports.children = children;
+exports.clone = clone;
+exports.contains = contains;
+exports.createClass = createClass;
+exports.css = css;
+exports.cssClass = cssClass;
+exports.documentReady = documentReady;
+exports.empty = empty;
+exports.encodeFormatData = encodeFormatData;
+exports.filter = filter;
+exports.find = find;
+exports.getOffset = getOffset;
+exports.getTransitionEndEventName = getTransitionEndEventName;
+exports.getTranslateXValue = getTranslateXValue;
+exports.getTranslateYValue = getTranslateYValue;
+exports.has3dTransforms = has3dTransforms;
+exports.hasClass = hasClass;
+exports.height = height;
+exports.html = html;
+exports.id = id;
+exports.inArray = inArray;
+exports.isArray = isArray;
+exports.isEmpty = isEmpty;
+exports.isEmptyObject = isEmptyObject;
+exports.isFunction = isFunction;
+exports.isInteger = isInteger;
+exports.isNumber = isNumber;
+exports.isNumeric = isNumeric;
+exports.isString = isString;
+exports.isUndefined = isUndefined;
+exports.loadScript = loadScript;
+exports.matchesSelector = matchesSelector;
+exports.off = off;
+exports.offset = offset;
+exports.offsetParent = offsetParent;
+exports.on = on;
+exports.parent = parent;
+exports.position = position;
+exports.prepend = prepend;
+exports.remove = remove;
+exports.removeClass = removeClass;
+exports.removeEvent = removeEvent;
+exports.replaceAll = replaceAll;
+exports.siblings = siblings;
+exports.tag = tag;
+exports.text = text;
+exports.toggleClass = toggleClass;
+exports.trigger = trigger;
+exports.triggerEvent = triggerEvent;
+exports.trim = trim;
+exports.urlArgs = urlArgs;
+exports.version = version;
+exports.width = width;

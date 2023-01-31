@@ -2,10 +2,10 @@
   "name": "@rainyjune/yuanjs",
   "version": "0.1.0",
   "description": "YuanJS, just another small JavaScript library",
-  "scripts": {
-    "build": "rollup --config"
-  },
   "type": "module",
+  "scripts": {
+    "build": "rimraf build && rollup --config && node ./fixup.js"
+  },
   "keywords": [
     "yuanjs",
     "YuanJS"
@@ -16,13 +16,21 @@
   },
   "license": "MIT",
   "author": "Kang CHEN <rainyjune@live.cn>",
-  "main": "build/yuan.js",
+  "main": "build/cjs/yuan.js",
+  "module": "build/mjs/yuan.js",
+  "exports": {
+    ".": {
+      "require": "./build/cjs/yuan.js",
+      "import": "./build/mjs/yuan.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Yuan-Projects/yuanjs.git"
   },
   "devDependencies": {
     "@lopatnov/rollup-plugin-uglify": "^2.1.5",
+    "rimraf": "^4.1.2",
     "rollup": "^3.9.1",
     "rollup-plugin-typescript2": "^0.34.1",
     "terser": "^5.16.1",

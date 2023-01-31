@@ -6,13 +6,17 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: 'build/yuan.js',
+        file: 'build/umd/yuan.js',
         format: 'umd',
         name: 'yuanjs'
       },
       {
-        file: 'build/yuan.esm.js',
+        file: 'build/mjs/yuan.js',
         format: 'es',
+      },
+      {
+        file: 'build/cjs/yuan.js',
+        format: 'cjs',
       },
     ],
     plugins: [typescript()]
@@ -21,7 +25,7 @@ export default [
     input: 'src/index.ts',
     output: [
       {
-        file: 'build/yuan.min.js',
+        file: 'build/umd/yuan.min.js',
         format: 'umd',
         name: 'yuanjs'
       },
