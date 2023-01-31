@@ -1,6 +1,6 @@
 {
   "name": "@rainyjune/yuanjs",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "YuanJS, just another small JavaScript library",
   "type": "module",
   "scripts": {
